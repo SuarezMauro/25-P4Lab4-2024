@@ -239,7 +239,7 @@ void listarProductosNoEnviadosVendedor(std::string nickV) //funcion auxiliar
     std::set<DTProducto *> listaProductos = controladorUsuario->listarProductosVendedor(nickV);
     for (auto it = listaProductos.begin(); it != listaProductos.end(); it++)
     {
-      if (!((*it)->enviadoCorrectamente()))
+      if (((*it)->enviadoCorrectamente()) == false)
       {
         int idProducto = (*it)->getId();
         std::string nombreProducto = (*it)->getNombre();
@@ -1330,8 +1330,6 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
   // for (compras de nickCliente) if compra.fecha = fechaCompra actualizarEnvio(idProducto)
   for (auto it2 = datoCliente(nickCliente)->getComprasPasadas().begin(); it2 != datoCliente(nickCliente)->getComprasPasadas().end(); it2++)
   {
-    std::cout << fechaCompra->getDia() << std::endl;
-    std::cout << (*it2)->getFechaDeCompra()->getDia() << std::endl;
     if ((*it2)->getFechaDeCompra()->compararFecha(fechaCompra))
     {
       controladorProducto->enviarProd(controladorProducto->getProducto(idProducto));
@@ -1368,6 +1366,7 @@ void ExpedienteUsuario() // falta testear
   }
   else
   {
+    std::cout <<"Error3" << std::endl;
     DTVendedor *esVendedor = datoVendedor(nickUsuario);
     std::string nickVendedor = esVendedor->getNickname();
     DTFecha *fechaVendedor = esVendedor->getFechaNacimiento();
