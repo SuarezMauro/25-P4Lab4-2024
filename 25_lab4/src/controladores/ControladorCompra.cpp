@@ -32,7 +32,6 @@ void ControladorCompra::crearCompra(std::string nickname, int dia, int mes, int 
 	Cliente *cliente = Fabrica::getInterfazUsuario()->getCliente(nickname);
 	Compra *nuevaCompra = new Compra(fechaCompra, precioInicial, cliente);
 	this->compraActual = nuevaCompra;
-	(compraActual->getCliente())->añadirCompra(compraActual->getDataCompra());
 };
 void ControladorCompra::agregarProductoACompra(int id, int cantidad)
 {
@@ -51,6 +50,7 @@ void ControladorCompra::registrarCompraExitosa(bool b)
 			producto->setCantidadEnStock(producto->getCantidadEnStock() - (*it)->getCantidad());
 		}
 		comprasExitosas.insert(compraActual);
+		(compraActual->getCliente())->añadirCompra(compraActual->getDataCompra());
 	}
 	else
 	{
