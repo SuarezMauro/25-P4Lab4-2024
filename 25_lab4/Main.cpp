@@ -1123,7 +1123,7 @@ void ConsultarPromocion() // Implementado //
   }
 }
 
-void RealizarCompra() // Implementado // falta que me cheque que exista el stock que deseo comprar
+void RealizarCompra() // Implementado // Error al ingresar productos en promocion a la vez que productos fuera de promo (Aunque no esta en los casos de uso por lo que no es prioridad).
 {
   // seleccion de cliente
   listarNickClientes();
@@ -1172,7 +1172,12 @@ void RealizarCompra() // Implementado // falta que me cheque que exista el stock
       };
       int cantidadAgregarCompra;
       std::cout << "Escriba la cantidad del producto" << std::endl;
+      std::cout << "Cantidad actual en stock: " << controladorProducto->getProducto(IdAgregarCompra)->getCantidadEnStock() << std::endl;
       std::cin >> cantidadAgregarCompra;
+      while(cantidadAgregarCompra > controladorProducto->getProducto(IdAgregarCompra)->getCantidadEnStock()){
+        std::cout << "Cantidad en stock excedida ingrese menor cantidad" << std::endl;
+        std::cin >> cantidadAgregarCompra;
+      }
       controladorCompra->agregarProductoACompra(IdAgregarCompra, cantidadAgregarCompra);
     }
     std::cout << "1-Agregar otro producto a la compra" << std::endl;
@@ -1283,7 +1288,7 @@ void EliminarComentario() // faltan funciones//
   // Eliminar el comentario "idComentario" y todas sus respuestas "en cascada"
 }
 
-void EnviarProducto() // faltan funciones//
+void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima los productos con envios pendientes.
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
   listarInfoVendedores(vendedores);
@@ -1327,10 +1332,11 @@ void EnviarProducto() // faltan funciones//
   {
     std::cout << fechaCompra->getDia() << std::endl;
     std::cout << (*it2)->getFechaDeCompra()->getDia() << std::endl;
-    if ((*it2)->getFechaDeCompra() == fechaCompra)
+    if ((*it2)->getFechaDeCompra()->compararFecha(fechaCompra))
     {
-      std::cout << "error" << std::endl;
       controladorProducto->enviarProd(controladorProducto->getProducto(idProducto));
+      std::cout << "Producto Enviado Correctamente" << std::endl;
+      break; // Agregue Break para cortar iteracion luego de enviado el producto
     }
   }
 }
