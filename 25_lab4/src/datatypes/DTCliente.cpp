@@ -12,11 +12,12 @@ std::set<DTCompra *> DTCliente::getComprasPasadas()
 {
   return comprasPasadas;
 };
-DTCliente::DTCliente(std::string nickname, DTFecha *fechaNacimiento, DTDireccion *direccion, std::string ciudadDeResidencia)
+DTCliente::DTCliente(std::string nickname, DTFecha *fechaNacimiento, DTDireccion *direccion, std::string ciudadDeResidencia,std::set<DTCompra *> comprasPasadas)
     : DTUsuario(nickname, fechaNacimiento)
 {
   this->direccion = direccion;
   this->ciudadDeResidencia = ciudadDeResidencia;
+  this->comprasPasadas = comprasPasadas;
 }
 DTCliente::~DTCliente()
 {

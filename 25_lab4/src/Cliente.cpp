@@ -18,7 +18,7 @@ std::set<DTCompra *> Cliente::getComprasPasadas()
 }
 DTCliente *Cliente::getDataCliente()
 {
-  DTCliente *dataCliente = new DTCliente(getNickname(), getFechaNacimiento()->copiarFecha(), direccion->copiarDireccion(), ciudadDeResidencia);
+  DTCliente *dataCliente = new DTCliente(getNickname(), getFechaNacimiento()->copiarFecha(), direccion->copiarDireccion(), ciudadDeResidencia, comprasPasadas);
   return dataCliente;
 }
 void Cliente::añadirCompra(DTCompra *compra)

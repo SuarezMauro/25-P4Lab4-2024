@@ -25,7 +25,7 @@ public:
     void crearCompra(std::string, int, int, int); // dia/mes/anio de hoy
     void agregarProductoACompra(int, int);
     void registrarCompraExitosa(bool b);
-    void calcularDescuentos();
+    bool calcularDescuentos();
     ~ControladorCompra();
 };
 

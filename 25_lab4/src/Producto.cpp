@@ -95,6 +95,7 @@ Producto::Producto(int id, std::string nombre, std::string descripcion, float pr
   this->tipo = tipo;
   this->vendedor = vendedor;
   this->promocion = NULL;
+  enviado = false;
 }
 Producto::~Producto(){};
 // Sobrecarga de operador '<<'

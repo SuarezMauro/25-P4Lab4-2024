@@ -20,7 +20,7 @@ public:
   DTDireccion *getDireccion();
   std::set<DTCompra *> getComprasPasadas();
   std::string getCiudadDeResidencia();
-  DTCliente(std::string, DTFecha *, DTDireccion *, std::string);
+  DTCliente(std::string, DTFecha *, DTDireccion *, std::string, std::set<DTCompra *>);
   ~DTCliente();
 };
 

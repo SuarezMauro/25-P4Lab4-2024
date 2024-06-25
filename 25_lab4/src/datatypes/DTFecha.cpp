@@ -47,7 +47,7 @@ int DTFecha::compararFecha(DTFecha *fecha)
   {
     return 0;
   }
-};
+}
 DTFecha *DTFecha::copiarFecha()
 {
   DTFecha *copia = new DTFecha(dia, mes, anio);

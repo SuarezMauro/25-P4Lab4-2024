@@ -514,13 +514,14 @@ void CargarDatos()
   // CP1 - Producto: PR2 - Cantidad: 2 - Enviado: Si
   int idCO1PR2 = idProducto(nombrePR2, nickUS1);
   controladorCompra->agregarProductoACompra(idCO1PR2, 2);
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO1PR2));
   // CP2 - Producto: PR4 - Cantidad: 1 - Enviado: No
   int idCO1PR4 = idProducto(nombrePR4, nickUS1);
   controladorCompra->agregarProductoACompra(idCO1PR4, 1);
   // CP3 - Producto: PR8 - Cantidad: 1 - Enviado: No
   int idCO1PR8 = idProducto(nombrePR8, nickUS1);
   controladorCompra->agregarProductoACompra(idCO1PR8, 1);
-  controladorCompra->calcularDescuentos();
+  bool des1 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR2 enviado
   // PR4 no enviado
@@ -531,7 +532,8 @@ void CargarDatos()
   // CP4 - Producto: PR5 - Cantidad: 1 - Enviado: Si
   int idCO2PR5 = idProducto(nombrePR5, nickUS3);
   controladorCompra->agregarProductoACompra(idCO2PR5, 1);
-  controladorCompra->calcularDescuentos();
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO2PR5));
+  bool des2 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR5 enviado
 
@@ -540,7 +542,8 @@ void CargarDatos()
   // CP5 - Producto: PR14 - Cantidad: 10 - Enviado: Si
   int idCO3PR14 = idProducto(nombrePR14, nickUS3);
   controladorCompra->agregarProductoACompra(idCO3PR14, 10);
-  controladorCompra->calcularDescuentos();
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO3PR14));
+  bool des3 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR14 enviado
 
@@ -549,13 +552,16 @@ void CargarDatos()
   // CP6 - Producto: PR11 - Cantidad: 1 - Enviado: Si
   int idCO4PR11 = idProducto(nombrePR11, nickUS2);
   controladorCompra->agregarProductoACompra(idCO4PR11, 1);
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO4PR11));
   // CP7 - Producto: PR12 - Cantidad: 1 - Enviado: Si
   int idCO4PR12 = idProducto(nombrePR12, nickUS3);
   controladorCompra->agregarProductoACompra(idCO4PR12, 1);
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO4PR12));
   // CP8 - Producto: PR13 - Cantidad: 1 - Enviado: Si
   int idCO4PR13 = idProducto(nombrePR13, nickUS10);
   controladorCompra->agregarProductoACompra(idCO4PR13, 1);
-  controladorCompra->calcularDescuentos();
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO4PR13));
+  bool des4 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR11 enviado
   // PR12 enviado
@@ -569,7 +575,8 @@ void CargarDatos()
   // CP8 - Producto: PR6 - Cantidad: 3 - Enviado: Si
   int idCO5PR6 = idProducto(nombrePR6, nickUS2);
   controladorCompra->agregarProductoACompra(idCO5PR6, 3);
-  controladorCompra->calcularDescuentos();
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO5PR6));
+  bool des5 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR3 no enviado
   // PR6 enviado
@@ -579,7 +586,7 @@ void CargarDatos()
   // CP9 - Producto: PR1 - Cantidad: 2 - Enviado: No
   int idCO6PR1 = idProducto(nombrePR1, nickUS2);
   controladorCompra->agregarProductoACompra(idCO6PR1, 2);
-  controladorCompra->calcularDescuentos();
+  bool des6 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR1 enviado
 
@@ -588,7 +595,8 @@ void CargarDatos()
   // CP10 - Producto: PR1 - Cantidad: 3 - Enviado: Si
   int idCO7PR1 = idProducto(nombrePR1, nickUS2);
   controladorCompra->agregarProductoACompra(idCO7PR1, 3);
-  controladorCompra->calcularDescuentos();
+  controladorProducto->enviarProd(controladorProducto->getProducto(idCO7PR1));
+  bool des7 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR1 enviado
 
@@ -597,7 +605,7 @@ void CargarDatos()
   // CP11 - Producto: PR1 - Cantidad: 4 - Enviado: No
   int idCO8PR1 = idProducto(nombrePR1, nickUS2);
   controladorCompra->agregarProductoACompra(idCO8PR1, 4);
-  controladorCompra->calcularDescuentos();
+  bool des8 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR1 no enviado
 
@@ -606,7 +614,7 @@ void CargarDatos()
   // CP12 - Producto: PR1 - Cantidad: 5 - Enviado: No
   int idCO9PR1 = idProducto(nombrePR1, nickUS2);
   controladorCompra->agregarProductoACompra(idCO9PR1, 5);
-  controladorCompra->calcularDescuentos();
+  bool des9 = controladorCompra->calcularDescuentos();
   controladorCompra->registrarCompraExitosa(true);
   // PR1 no enviado
 
@@ -978,7 +986,7 @@ void ConsultarUnProducto() // Implementado //
   DTProducto *producto = controladorProducto->obtenerProductoDisponible(idProducto);
   imprimirInfoProducto(producto);
 }
-void CrearPromocion() // Implementado // falta revisar que el producto no este en promo o ya lo halla asignado
+void CrearPromocion() // Implementado // ANDA // Puede mejorar evitando agregar productos a vendedores que no los tienen y evitar loop al agregar mismo producto a promo varias veces.
 {
   // ingreso de datos de la promo
   std::string nombrePromo;
@@ -1041,7 +1049,7 @@ void CrearPromocion() // Implementado // falta revisar que el producto no este e
       int IdAgregarPromo;
       std::cout << "Escriba el codigo de producto que desea asignar a la promocion" << std::endl;
       std::cin >> IdAgregarPromo;
-      while (!EstaEnPromo(IdAgregarPromo))
+      while (EstaEnPromo(IdAgregarPromo))
       {
         std::cout << "El producto seleccionado ya se encuentra en una promocion" << std::endl;
         std::cout << "Porfavor ingrese un producto valido" << std::endl;
@@ -1081,7 +1089,8 @@ void ConsultarPromocion() // Implementado //
     {
       int idProductos = (it)->first;
       std::string nickProductos = ((it)->second)->getNombre();
-      std::cout << "Codigo: " << idProductos << ", Nombre: " << nickProductos;
+      int cantidadMinima = ((it)->second)->getCantidadMinima();
+      std::cout << "Codigo: " << idProductos << ", Nombre: " << nickProductos <<", Cantidad Minima:"<< cantidadMinima;
       std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -1114,7 +1123,7 @@ void ConsultarPromocion() // Implementado //
   }
 }
 
-void RealizarCompra() // Implementado // falta restar stock y que me cheque que exista el stock que deseo comprar
+void RealizarCompra() // Implementado // falta que me cheque que exista el stock que deseo comprar
 {
   // seleccion de cliente
   listarNickClientes();
@@ -1172,7 +1181,12 @@ void RealizarCompra() // Implementado // falta restar stock y que me cheque que 
   }
   // Calculo de descuentos
   std::cout << "Calcular descuentos:" << std::endl;
-  controladorCompra->calcularDescuentos();
+  bool des = controladorCompra->calcularDescuentos();
+  if(des){
+    std::cout << "Descuento aplicado" << std::endl;
+  }else{
+    std::cout << "No hay descuento disponible" << std::endl;
+  }
   // Mostrar detalles compra
   DTCompra *dataCompra = controladorCompra->obtenerDatosCompra();
   std::cout << "Datos compra:" << std::endl;
@@ -1306,21 +1320,18 @@ void EnviarProducto() // faltan funciones//
   std::cin >> dia;
   std::cin >> mes;
   std::cin >> anio;
-  std::cout << "error -1" << std::endl;
   DTFecha *fechaCompra = new DTFecha(dia, mes, anio);
-  std::cout << "error0" << std::endl;
   // Se marca como enviado "idProducto" de la compra de "nickCliente" con fecha "fechaCompra"
   // for (compras de nickCliente) if compra.fecha = fechaCompra actualizarEnvio(idProducto)
   for (auto it2 = datoCliente(nickCliente)->getComprasPasadas().begin(); it2 != datoCliente(nickCliente)->getComprasPasadas().end(); it2++)
   {
-    std::cout << "error 1" << std::endl;
-    if (((*it2)->getFechaDeCompra()->compararFecha(fechaCompra)) == 0)
+    std::cout << fechaCompra->getDia() << std::endl;
+    std::cout << (*it2)->getFechaDeCompra()->getDia() << std::endl;
+    if ((*it2)->getFechaDeCompra() == fechaCompra)
     {
-      std::cout << "error 2" << std::endl;
+      std::cout << "error" << std::endl;
       controladorProducto->enviarProd(controladorProducto->getProducto(idProducto));
-      std::cout << "error 3" << std::endl;
     }
-    std::cout << "error 4" << std::endl;
   }
 }
 

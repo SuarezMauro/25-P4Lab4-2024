@@ -45,6 +45,11 @@ void ControladorCompra::registrarCompraExitosa(bool b)
 {
 	if (b)
 	{
+		std::set<DTRegistroProducto*> regi = compraActual->getRegistroProductos();
+		for(auto it = regi.begin(); it != regi.end(); it++){
+			Producto *producto = Fabrica::getInterfazProducto()->getProducto((*it)->getId());
+			producto->setCantidadEnStock(producto->getCantidadEnStock() - (*it)->getCantidad());
+		}
 		comprasExitosas.insert(compraActual);
 	}
 	else
@@ -52,7 +57,7 @@ void ControladorCompra::registrarCompraExitosa(bool b)
 		compraActual->~Compra();
 	}
 }
-void ControladorCompra::calcularDescuentos()
+bool ControladorCompra::calcularDescuentos()
 {
 	std::set<DTRegistroProducto *> productos = compraActual->getRegistroProductos();
 	for (std::set<DTRegistroProducto *>::iterator it = productos.begin(); it != productos.end(); ++it)
@@ -70,19 +75,18 @@ void ControladorCompra::calcularDescuentos()
 			}
 			if (auxiliar.size() == productosPromo.size())
 			{
-				std::cout << "Descuento aplicado" << std::endl;
 				int monto1 = compraActual->getMontoFinal();
 				int monto2 = (*it)->getInfoPromo()->getPorcentajeDescuento();
 				int montoF = monto1 - (monto1 * monto2 / 100);
 				compraActual->setMontoFinal(montoF);
-				break;
+				return true;
 			}
 			else
 			{
-				std::cout << "No hay descuentos disponibles" << std::endl;
+				return false;
 			};
 		}
-	};
+	};return false;
 }
 ControladorCompra::ControladorCompra() {}
 ControladorCompra::~ControladorCompra()
