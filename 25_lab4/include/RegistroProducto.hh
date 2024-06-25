@@ -1,0 +1,4 @@
+#ifndef REGISTRO_PRODUCTO
+#define REGISTRO_PRODUCTO
+
+#endif
