@@ -9,6 +9,7 @@ IControladorUsuario *controladorUsuario = Fabrica::getInterfazUsuario();
 IControladorProducto *controladorProducto = Fabrica::getInterfazProducto();
 IControladorPromocion *controladorPromocion = Fabrica::getInterfazPromocion();
 IControladorCompra *controladorCompra = Fabrica::getInterfazCompra();
+IControladorComentario *controladorComentario = Fabrica::getInterfazComentario();
 
 //--------------------------------------FUNCIONES AUXILIARES----------------------------------------------------
 bool ExisteUsuario(std::string nickname) // funcion auxiliar
@@ -39,6 +40,28 @@ bool ExisteCliente(std::string nickname, std::set<DTCliente *> clientes) // func
   for (auto it = clientes.begin(); it != clientes.end(); it++)
   {
     if ((*it)->getNickname() == nickname)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+bool ExisteProducto(int id){
+  std::set<DTProducto*> productos = controladorProducto->obtenerProductosDisponibles();
+  for (auto it = productos.begin(); it != productos.end(); it++)
+  {
+    if ((*it)->getId() == id)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+bool ExisteComentario(int idC, int idP){
+  std::set<DTComentario*> comentarios = controladorComentario->listarComentariosProducto(idP);
+  for (auto it = comentarios.begin(); it != comentarios.end(); it++)
+  {
+    if ((*it)->getId() == idC)
     {
       return true;
     }
@@ -140,6 +163,20 @@ void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
     std::cout << std::endl;
   }
 }
+bool listarComentariosProducto(int id){
+  std::set<DTComentario *> comentariosProd = controladorComentario->listarComentariosProducto(id);
+  if (comentariosProd.empty()){
+    std::cout << "No hay comentarios en este producto" << std::endl;
+    return false;
+  } else {
+    for (auto it = comentariosProd.begin(); it != comentariosProd.end(); it++)
+    { 
+      std::cout << "ID: " <<(*it)->getId() << ", " << (*it)->getFecha()->toString() << ", '" << (*it)->getComentario() << "'";
+      std::cout << std::endl;
+    }
+    return true;
+  }
+};
 void imprimirInfoProducto(DTProducto *producto)
 {
   int precioProducto = producto->getPrecio();
@@ -1213,11 +1250,9 @@ void RealizarCompra() // Implementado // Error al ingresar productos en promocio
 }
                       // chequear comprar varios productos
 
-void DejarComentario() // faltan funciones//
+void DejarComentario() // funciona dejar comentario y responder comentario, falla al responder comentario que es respuesta
 {
-  std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
-  listarInfoVendedores(vendedores);
-  listarNickClientes();
+  listarNickUsuarios();
   std::string nickUsuario;
   std::cout << "Escriba su nickname de usuario" << std::endl;
   std::cin >> nickUsuario;
@@ -1238,6 +1273,12 @@ void DejarComentario() // faltan funciones//
   int idDelProducto;
   std::cout << "Escriba el ID del producto que desea comentar." << std::endl;
   std::cin >> idDelProducto;
+  while (!ExisteProducto(idDelProducto))
+  {
+    std::cout << "El producto ingresado no existe" << std::endl;
+    std::cout << "Porfavor ingrese un producto valido" << std::endl;
+    std::cin >> idDelProducto;
+  }
   std::cout << "1-Realizar un nuevo comentario" << std::endl
             << "2-Responder un comentario existente";
   std::cout << std::endl;
@@ -1248,18 +1289,47 @@ void DejarComentario() // faltan funciones//
     std::string texto;
     std::cout << "Escriba su comentario del producto" << std::endl;
     std::getline(std::cin >> std::ws, texto);
+    std::cout << "Ingrese fecha de hoy (dia/mes/anio)" << std::endl;
+    int dia;
+    int mes;
+    int anio;
+    std::cin >> dia;
+    std::cin >> mes;
+    std::cin >> anio;
+    DTFecha* fechahoy = new DTFecha(dia,mes,anio);
     // comentar ese texto en "idDelProducto"
+    controladorComentario->comentarProducto(texto,fechahoy,idDelProducto,nickUsuario);
+    std::cout << "Comentario ingresado" << std::endl;
   }
   else if (opcionElegida == 2)
   {
-    // lsitar comentarios del producto
-    int aResponder;
-    std::cout << "Escriba el ID del comentario que desea responder." << std::endl;
-    std::cin >> aResponder;
-    std::string texto;
-    std::cout << "Escriba su comentario del producto" << std::endl;
-    std::getline(std::cin >> std::ws, texto);
-    // comentar ese texto en respuesta de "aResponder"
+    // listar comentarios del producto
+    bool hayCom = listarComentariosProducto(idDelProducto);
+    if (hayCom){
+      int aResponder;
+      std::cout << "Escriba el ID del comentario que desea responder." << std::endl;
+      std::cin >> aResponder;
+      while (!ExisteComentario(aResponder, idDelProducto))
+      {
+        std::cout << "El comentario ingresado no existe" << std::endl;
+        std::cout << "Porfavor ingrese un ID valido" << std::endl;
+        std::cin >> aResponder;
+      }
+      std::string texto;
+      std::cout << "Escriba su comentario del producto" << std::endl;
+      std::getline(std::cin >> std::ws, texto);
+      std::cout << "Ingrese fecha de hoy (dia/mes/anio)" << std::endl;
+      int dia;
+      int mes;
+      int anio;
+      std::cin >> dia;
+      std::cin >> mes;
+      std::cin >> anio;
+      DTFecha* fechahoy = new DTFecha(dia,mes,anio);
+      // comentar ese texto en respuesta de "aResponder"
+      controladorComentario->responderComentario(texto, fechahoy,aResponder,nickUsuario);
+      std::cout << "Respuesta ingresada" << std::endl;
+      }
   }
   else
   {
