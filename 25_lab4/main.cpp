@@ -47,7 +47,8 @@ bool ExisteCliente(std::string nickname, std::set<DTCliente *> clientes) // func
   }
   return false;
 }
-bool ExisteProducto(int id){
+bool ExisteProducto(int id)
+{
   std::set<DTProducto*> productos = controladorProducto->obtenerProductosDisponibles();
   for (auto it = productos.begin(); it != productos.end(); it++)
   {
@@ -58,7 +59,6 @@ bool ExisteProducto(int id){
   }
   return false;
 }
-
 bool ExisteComentario(std::set<DTComentario*> comentarios, int IdComentario) // funcion auxiliar
 {
   for (auto it = comentarios.begin(); it != comentarios.end(); it++)
@@ -76,8 +76,6 @@ bool ExisteComentario(std::set<DTComentario*> comentarios, int IdComentario) // 
   }
   return false;
 }
-
-
 DTVendedor *datoVendedor(std::string nickname) // funcion auxiliar
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
@@ -175,8 +173,6 @@ void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
   }
   std::cout << std::endl;
 }
-
-
 bool listarComentarios(std::set<DTComentario *> comentariosProducto) // funcion auxiliar
 {
   if (comentariosProducto.empty()){
@@ -196,8 +192,6 @@ bool listarComentarios(std::set<DTComentario *> comentariosProducto) // funcion 
   }
   return true;
 };
-
-
 void imprimirInfoProducto(DTProducto *producto)
 {
   int precioProducto = producto->getPrecio();
@@ -289,7 +283,6 @@ void ListarComprasRealizadas(DTCliente *cliente) // funcion auxiliar
     }
     std::cout << std::endl;
   };
-
 int idProducto(std::string nickProducto, std::string nickVendedor) // funcion auxiliar
 {
   std::set<DTProducto *> productos = controladorProducto->obtenerProductosDisponibles();
@@ -302,7 +295,6 @@ int idProducto(std::string nickProducto, std::string nickVendedor) // funcion au
   };
   return 0;
 }
-
 bool estaEnCompra(int id, DTCompra *compra) //funcion auxiliar
 {
   if (compra->getRegistroProducto(id) != NULL)

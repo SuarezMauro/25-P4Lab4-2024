@@ -62,3 +62,4 @@ std::set<DTProducto *> ControladorProducto::obtenerProductosDisponibles()
   }
   return dataProducto;
 }
+
