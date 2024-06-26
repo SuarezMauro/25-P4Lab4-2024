@@ -6,7 +6,7 @@ std::string Vendedor::getCodigoRUT()
 }
 DTVendedor *Vendedor::getDataVendedor()
 {
-  DTVendedor *dataVendedor = new DTVendedor(getNickname(), getFechaNacimiento(), codigoRUT);
+  DTVendedor *dataVendedor = new DTVendedor(this->getNickname(), this->getFechaNacimiento(), codigoRUT, suscriptores);
   return dataVendedor;
 }
 DTProducto *Vendedor::getDataProducto(int id)
@@ -23,6 +23,9 @@ DTProducto *Vendedor::getDataProducto(int id)
   }
   return dataProducto;
 }
+std::set<DTCliente *> Vendedor::getSuscriptores(){
+  return suscriptores;
+};
 void Vendedor::añadirPromocion(Promocion *promocion)
 {
   promociones.insert(promocion);
@@ -31,7 +34,7 @@ void Vendedor::añadirProducto(Producto *producto)
 {
   productos.insert(producto);
 }
-void Vendedor::añadirSuscriptor(Cliente *suscriptor)
+void Vendedor::añadirSuscriptor(DTCliente *suscriptor)
 {
   suscriptores.insert(suscriptor);
 }
@@ -43,7 +46,7 @@ void Vendedor::removerProducto(Producto *producto)
 {
   productos.erase(producto);
 }
-void Vendedor::removerSuscriptor(Cliente *suscriptor)
+void Vendedor::removerSuscriptor(DTCliente *suscriptor)
 {
   suscriptores.erase(suscriptor);
 }

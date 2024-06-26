@@ -3,8 +3,7 @@
 
 #include "./datatypes/DTUsuario.hh"
 #include "./Comentario.hh"
-
-class Comentario;
+#include "./datatypes/DTComentario.hh"
 
 class Usuario
 {

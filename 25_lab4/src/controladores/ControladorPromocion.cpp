@@ -47,6 +47,14 @@ void ControladorPromocion::altaNuevaPromo()
     (*it)->addPromocion(promo);
   }
   vendedor->añadirPromocion(promo);
+  std::set<DTCliente*> clientesSusc = Fabrica::getInterfazUsuario()->listarSuscriptores(vendedor->getNickname());
+  if (!clientesSusc.empty()){
+    for (auto it = clientesSusc.begin(); it != clientesSusc.end(); it++){
+    std::string nickCliente = (*it)->getNickname();
+    Cliente* cliente = Fabrica::getInterfazUsuario()->getCliente(nickCliente);
+    cliente->notificar(promo->getNombre(),vendedor->getNickname());
+    }
+  }
   infoProductos.clear();
   productos.clear();
   vendedor = NULL;

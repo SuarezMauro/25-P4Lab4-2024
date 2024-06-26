@@ -50,7 +50,11 @@ void ControladorComentario::responderComentario(std::string comentario, DTFecha 
 {
   Usuario *remitente = Fabrica::getInterfazUsuario()->getUsuario(nickRemitente);
   Comentario *comentarioRespondido = getComentario(idComentario);
-  Comentario *nuevoComentario = new Comentario(getNuevoID(), fecha, comentario, nickRemitente, comentarioRespondido, NULL);
+  Comentario *nuevoComentario = new Comentario(getNuevoID(), fecha, comentario, nickRemitente, comentarioRespondido, comentarioRespondido->getInfoProductoComentado());
+  IControladorProducto *controladorProducto = Fabrica::getInterfazProducto();
+  int id = comentarioRespondido->getInfoProductoComentado()->getId();
+  Producto * prod = controladorProducto->getProducto(id);
+  prod->añadirComentario(nuevoComentario);
   remitente->añadirComentario(nuevoComentario);
   comentarioRespondido->agregarRespuesta(nuevoComentario);
   comentarios.insert(nuevoComentario);

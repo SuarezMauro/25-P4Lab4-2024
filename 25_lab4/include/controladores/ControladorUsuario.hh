@@ -4,6 +4,7 @@
 #include "../interfaces/IControladorUsuario.hh"
 #include "../Cliente.hh"
 #include "../Vendedor.hh"
+#include "../Usuario.hh"
 
 #include <set>
 
@@ -19,12 +20,12 @@ public:
   static ControladorUsuario *getInstancia(); // Implementado
   Cliente *getCliente(std::string);          // Implementado
   Vendedor *getVendedor(std::string);        // Implementado
-  Usuario *getUsuario(std::string);
+  Usuario *getUsuario(std::string);          // Implementado
   void altaNuevoCliente(std::string, std::string, DTFecha *, DTDireccion *, std::string); // Implementado
   void altaNuevoVendedor(std::string, std::string, DTFecha *, std::string);               // Implementado
-  void realizarSuscripciones(std::string, std::set<std::string>);                         // Implementado
+  void realizarSuscripcion(std::string, std::string);                         // Implementado
   void eliminarSuscripciones(std::string, std::set<std::string>);                         // Implementado
-  void eliminarNotificaciones(std::string);
+  void eliminarNotificaciones(std::string);                                               // Implementado
   std::set<DTUsuario *> listarUsuarios();                          // Implementado
   std::set<DTCliente *> listarClientes();                          // Implementado
   std::set<DTVendedor *> listarVendedores();                       // Implementado
@@ -33,6 +34,7 @@ public:
   std::set<DTNotificacion *> listarNotificaciones(std::string);
   std::set<DTVendedor *> listarSuscripciones(std::string);
   std::set<DTComentario *> listarComentariosUsuario(std::string);
+  std::set<DTCliente *> listarSuscriptores(std::string);
   ~ControladorUsuario();
 
   std::set<DTVendedor *> listarVendedoresSuscritos(std::string);

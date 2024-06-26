@@ -8,6 +8,8 @@
 #include <set>
 
 class DTCliente;
+class DTRegistroProducto;
+
 class DTCompra
 {
 private:

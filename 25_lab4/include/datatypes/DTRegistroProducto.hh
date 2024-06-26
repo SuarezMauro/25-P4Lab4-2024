@@ -4,6 +4,8 @@
 #include <iostream>
 #include "./DTPromocion.hh"
 
+class DTPromocion;
+
 class DTRegistroProducto
 {
 private:

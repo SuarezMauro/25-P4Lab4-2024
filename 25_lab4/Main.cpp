@@ -24,7 +24,7 @@ bool ExisteUsuario(std::string nickname) // funcion auxiliar
   }
   return false;
 }
-bool ExisteVendedor(std::string nickname, std::set<DTVendedor *> vendedores) // funcion auxiliar
+bool ExisteVendedor(std::string nickname, std::set<DTVendedor *> vendedores) // funcion auxiliar16
 {
   for (auto it = vendedores.begin(); it != vendedores.end(); it++)
   {
@@ -164,15 +164,27 @@ void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
   }
 }
 bool listarComentariosProducto(int id){
+  std::cout << "Error 00000" << std::endl;
   std::set<DTComentario *> comentariosProd = controladorComentario->listarComentariosProducto(id);
+  std::cout << "Error 0" << std::endl;
   if (comentariosProd.empty()){
-    std::cout << "No hay comentarios en este producto" << std::endl;
     return false;
   } else {
     for (auto it = comentariosProd.begin(); it != comentariosProd.end(); it++)
     { 
+      std::cout << "Error 1" << std::endl;
       std::cout << "ID: " <<(*it)->getId() << ", " << (*it)->getFecha()->toString() << ", '" << (*it)->getComentario() << "'";
+      std::cout << "Error 2" << std::endl;
       std::cout << std::endl;
+    /*if(!(*it)->getInfoRespuestas().empty()){
+        std::cout << "Error 3" << std::endl;
+        for (auto it2 = (*it)->getInfoRespuestas().begin(); it2 != (*it)->getInfoRespuestas().end(); it2++){
+          std::cout << "Error 4" << std::endl;
+        std::cout << "ID: " <<(*it2)->getId() << ", " << (*it2)->getFecha()->toString() << ", '" << (*it2)->getComentario() << "'";
+        std::cout << "Error 5" << std::endl;
+        std::cout << std::endl;
+      }
+      }*/
     }
     return true;
   }
@@ -1329,6 +1341,8 @@ void DejarComentario() // funciona dejar comentario y responder comentario, fall
       // comentar ese texto en respuesta de "aResponder"
       controladorComentario->responderComentario(texto, fechahoy,aResponder,nickUsuario);
       std::cout << "Respuesta ingresada" << std::endl;
+      } else {
+        std::cout << "No hay comentarios en este producto" << std::endl;
       }
   }
   else
@@ -1450,7 +1464,7 @@ void ExpedienteUsuario() // falta testear
     ListarPromosVigentesVendedor(esVendedor);
   }
 }
-void SuscribirseNotificacion() // Implementado //
+void SuscribirseNotificacion() // Implementado //error al agregar otra suscripcion
 {
   listarNickClientes();
   std::string nickCliente;
@@ -1471,25 +1485,23 @@ void SuscribirseNotificacion() // Implementado //
     {
       std::set<DTVendedor *> vendedoresNoSuscripto = controladorUsuario->listarVendedoresNoSuscritos(nickCliente);
       listarNickVendedores(vendedoresNoSuscripto);
-      std::string vendedor;
+      std::string nickVendedor;
       std::cout << "Ingrese el nickname del vendedor al que desea suscribirse" << std::endl;
-      std::cin >> vendedor;
+      std::cin >> nickVendedor;
 
-      while (!ExisteVendedor(vendedor, vendedoresNoSuscripto))
+      while (!ExisteVendedor(nickVendedor, vendedoresNoSuscripto))
       {
         std::cout << "Porfavor ingrese un vendedor valido" << std::endl;
-        std::cin >> vendedor;
+        std::cin >> nickVendedor;
       };
-      nickVendedores.insert(vendedor);
-      controladorUsuario->realizarSuscripciones(nickCliente, nickVendedores);
-      nickVendedores.erase(vendedor);
+      controladorUsuario->realizarSuscripcion(nickCliente, nickVendedor);
     }
     std::cout << "1-Agregar otra suscripcion" << std::endl
               << "2-Salir de realizar suscripciones" << std::endl;
     std::cin >> opcion;
   }
 }
-void ConsultaNotificacion() // incompleto // falta  "eliminarNotificaciones"
+void ConsultaNotificacion() // incompleto //
 {
   listarNickClientes();
   std::string nickCliente;
@@ -1503,22 +1515,30 @@ void ConsultaNotificacion() // incompleto // falta  "eliminarNotificaciones"
     std::cin >> nickCliente;
   }
   std::set<DTNotificacion *> notificaciones = controladorUsuario->listarNotificaciones(nickCliente);
+  std::set<DTVendedor*> suscripciones = controladorUsuario->listarSuscripciones(nickCliente);
   std::set<std::string> nickVendedores;
-  for (auto it = notificaciones.begin(); it != notificaciones.end(); it++)
-  {
-    std::string nickVendedor = (*it)->getNicknameVendedor();
-    std::string nombrePromocion = (*it)->getNombrePromocion();
-    std::set<DTProducto *> productosEnPromo = controladorPromocion->productosEnUnaPromo(nombrePromocion);
-    std::cout << "Vendedor: " << nickVendedor << ", Promocion: " << nombrePromocion;
-    for (auto it2 = productosEnPromo.begin(); it2 != productosEnPromo.end(); it2++)
+  if (suscripciones.empty()){
+    std::cout << "No tiene suscripciones" << std::endl;
+  } else if(notificaciones.empty()){
+    std::cout << "No tiene notificaciones sin leer" << std::endl;
+  } else {
+    for (auto it = notificaciones.begin(); it != notificaciones.end(); it++)
     {
-      std::cout << ", Producto: " << (*it2);
+      std::string nickVendedor = (*it)->getNicknameVendedor();
+      std::string nombrePromocion = (*it)->getNombrePromocion();
+      std::set<DTProducto *> productosEnPromo = controladorPromocion->productosEnUnaPromo(nombrePromocion);
+      std::cout << "Vendedor: " << nickVendedor << ", Promocion: " << nombrePromocion;
+      for (auto it2 = productosEnPromo.begin(); it2 != productosEnPromo.end(); it2++)
+      {
+        std::string nombreProd = (*it2)->getNombre();
+        std::cout << ", Producto: " << nombreProd;
+      };
+      
+      std::cout << std::endl;
+      nickVendedores.insert(nickVendedor);
     };
-    
-    std::cout << std::endl;
-    nickVendedores.insert(nickVendedor);
-  };
-  // controladorUsuario->eliminarNotificaciones(nickCliente, nickVendedores);
+  }
+  controladorUsuario->eliminarNotificaciones(nickCliente);
 }
 void EliminarSuscripcion() // Implementado //
 {

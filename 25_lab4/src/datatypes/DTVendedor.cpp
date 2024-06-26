@@ -8,10 +8,11 @@ std::set<DTPromocion *> DTVendedor::getPromociones()
 {
   return promociones;
 }
-DTVendedor::DTVendedor(std::string nickname, DTFecha *fechaNacimiento, std::string codigoRUT)
+DTVendedor::DTVendedor(std::string nickname, DTFecha *fechaNacimiento, std::string codigoRUT, std::set<DTCliente*> sus)
     : DTUsuario(nickname, fechaNacimiento)
 {
   this->codigoRUT = codigoRUT;
+  this->suscriptores = sus;
 }
 DTVendedor::~DTVendedor()
 {

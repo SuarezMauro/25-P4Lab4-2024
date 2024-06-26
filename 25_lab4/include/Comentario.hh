@@ -7,6 +7,9 @@
 #include <iostream>
 #include <set>
 
+class DTProducto;
+class DTComentario;
+
 class Comentario
 {
 private:
