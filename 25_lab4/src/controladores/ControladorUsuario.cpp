@@ -118,17 +118,18 @@ std::set<DTVendedor *> ControladorUsuario::listarVendedoresNoSuscritos(std::stri
   std::set<DTVendedor *> listaNoSuscritos = listarVendedores();
   Cliente *usuario = getCliente(nickname);
   std::set<DTVendedor *> suscripcionesUsuario = usuario->getSuscripciones();
-  for (std::set<DTVendedor *>::iterator it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
+  for (auto it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
   {
     std::string nickSuscripcion = (*it)->getNickname();
     bool encontrado = false;
-    for (std::set<DTVendedor *>::iterator dt = listaNoSuscritos.begin(); (dt != listaNoSuscritos.end()) && !encontrado; dt++)
+    for (auto dt = listaNoSuscritos.begin(); (dt != listaNoSuscritos.end()) && !encontrado; dt++)
     {
       if ((*dt)->getNickname() == nickSuscripcion)
       {
         DTVendedor *aBorrar = *dt;
         listaNoSuscritos.erase(aBorrar);
-        delete aBorrar;
+        //delete aBorrar; //tira error aca
+        encontrado = true; ///////////////////
       }
     }
   }

@@ -1501,7 +1501,7 @@ void SuscribirseNotificacion() // Implementado //error al agregar otra suscripci
     std::cin >> opcion;
   }
 }
-void ConsultaNotificacion() // incompleto //
+void ConsultaNotificacion()
 {
   listarNickClientes();
   std::string nickCliente;
