@@ -19,7 +19,7 @@ private:
     std::string descripcion;
     DTFecha *fechaVencimiento;
     float porcentajeDescuento;
-    DTVendedor *vendedor;
+    //DTVendedor *vendedor;
     std::map<int, DTProductoPromo *> productos;
 
 public:
@@ -27,10 +27,10 @@ public:
     std::string getDescripcion();
     DTFecha *getFechaVencimiento();
     float getPorcentajeDescuento();
-    DTVendedor *getInfoVendedor();
+   // DTVendedor *getInfoVendedor();
     std::map<int, DTProductoPromo *> getProductos();
     DTProductoPromo *getProducto(int id);
-    DTPromocion(std::string, std::string, DTFecha *, float, DTVendedor *, std::map<int, DTProductoPromo *>);
+    DTPromocion(std::string, std::string, DTFecha *, float, /*DTVendedor *,*/ std::map<int, DTProductoPromo *>);
     ~DTPromocion();
 };
 

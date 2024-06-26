@@ -6,7 +6,11 @@ std::string Vendedor::getCodigoRUT()
 }
 DTVendedor *Vendedor::getDataVendedor()
 {
-  DTVendedor *dataVendedor = new DTVendedor(getNickname(), getFechaNacimiento(), codigoRUT);
+  std::set<DTPromocion*> datapromos;
+  for(auto it = promociones.begin(); it != promociones.end();it++){
+    datapromos.insert((*it)->getDataPromocion());
+  }
+  DTVendedor *dataVendedor = new DTVendedor(getNickname(), getFechaNacimiento(), codigoRUT,datapromos);
   return dataVendedor;
 }
 DTProducto *Vendedor::getDataProducto(int id)
