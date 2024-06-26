@@ -99,7 +99,7 @@ DTPromocion *Promocion::getDataPromocion() // revisar
         DTProductoPromo *nuevaData = new DTProductoPromo((*it)->getId(), (*it)->getNombre(), cantMin, porcentajeDesc);
         dataProductosPromo.insert({(*it)->getId(), nuevaData});
     }
-    DTPromocion *dataPromocion = new DTPromocion(nombre, descripcion, fechaDeVencimiento->copiarFecha(), porcentajeDescuento, vendedor->getDataVendedor(), dataProductosPromo);
+    DTPromocion *dataPromocion = new DTPromocion(nombre, descripcion, fechaDeVencimiento->copiarFecha(), porcentajeDescuento, /*vendedor->getDataVendedor(),*/ dataProductosPromo);
     return dataPromocion;
 }
 Promocion::Promocion(std::string nombre, std::string descripcion, DTFecha *fechaVencimiento, float porcentajeDescuento, Vendedor *vendedor, std::set<Producto *> productos, std::map<int, InfoPromoProducto *> infoProductos)

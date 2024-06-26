@@ -17,7 +17,7 @@ private:
 public:
   std::string getCodigoRUT();
   std::set<DTPromocion *> getPromociones();
-  DTVendedor(std::string, DTFecha *, std::string);
+  DTVendedor(std::string, DTFecha *, std::string,std::set<DTPromocion*>);
   ~DTVendedor();
 };
 

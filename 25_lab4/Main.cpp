@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 
+
 IControladorUsuario *controladorUsuario = Fabrica::getInterfazUsuario();
 IControladorProducto *controladorProducto = Fabrica::getInterfazProducto();
 IControladorPromocion *controladorPromocion = Fabrica::getInterfazPromocion();
@@ -178,8 +179,9 @@ void ListarPromosVigentesVendedor(DTVendedor *vendedor) // funcion auxiliar
 {
   std::cout << "Promociones del vendedor: " << std::endl;
   std::cout << std::endl;
-  for (auto it = (vendedor->getPromociones()).begin(); it != (vendedor->getPromociones()).end(); ++it)
-  {
+  std::set<DTPromocion*> aux = vendedor->getPromociones();
+  for (std::set<DTPromocion*>::iterator it = aux.begin(); it != aux.end(); ++it)
+  {  
     int dia = ((*it)->getFechaVencimiento())->getDia();
     int mes = ((*it)->getFechaVencimiento())->getMes();
     int anio = ((*it)->getFechaVencimiento())->getAnio();
@@ -188,7 +190,8 @@ void ListarPromosVigentesVendedor(DTVendedor *vendedor) // funcion auxiliar
               << "Fecha de vencimiento: " << dia << "/" << mes << "/" << anio << std::endl;
     std::cout << std::endl;
     std::cout << "Productos: " << std::endl;
-    for (auto it2 = (*it)->getProductos().begin(); it2 != (*it)->getProductos().end(); it2++)
+    std::map<int,DTProductoPromo*> aux2 = (*it)->getProductos();
+    for (auto it2 = aux2.begin(); it2 != aux2.end(); it2++)
     {
       std::cout << "Codigo: " << (*it2).second->getId() << std::endl
                 << "Nombre: " << (*it2).second->getNombre() << std::endl
@@ -201,26 +204,38 @@ void ListarPromosVigentesVendedor(DTVendedor *vendedor) // funcion auxiliar
 void ListarComprasRealizadas(DTCliente *cliente) // funcion auxiliar
 {
   std::cout << "Compras realizadas:" << std::endl;
-  for (auto it = (cliente->getComprasPasadas()).begin(); it != (cliente->getComprasPasadas()).end(); ++it)
+  std::set<DTCompra*> aux = cliente->getComprasPasadas();
+  for (auto it = aux.begin(); it != aux.end(); ++it)
   {
     int dia = ((*it)->getFechaDeCompra())->getDia();
     int mes = ((*it)->getFechaDeCompra())->getMes();
     int anio = ((*it)->getFechaDeCompra())->getAnio();
     std::cout << "Fecha de compra: " << dia << "/" << mes << "/" << anio << std::endl
               << "Monto final: " << (*it)->getMontoFinal() << std::endl;
-    std::cout << std::endl;
-    std::cout << "Productos: " << std::endl;
-    for (auto it2 = (*it)->getRegistroProductos().begin(); it2 != (*it)->getRegistroProductos().end(); it2++)
+   std::cout << std::endl;
+   std::cout << "Productos: " << std::endl;
+   std::set<DTRegistroProducto*> aux1 = (*it)->getRegistroProductos();
+   for (auto it2 = aux1.begin(); it2 != aux1.end(); it2++)
     {
       std::cout << "ID: " << (*it2)->getId() << std::endl
                 << "Nombre: " << (*it2)->getNombre() << std::endl
                 << "Precio: " << (*it2)->getPrecio() << std::endl
-                << "Unidades compradas: " << (*it2)->getCantidad() << std::endl
-                << std::endl;
+                << "Unidades compradas: " << (*it2)->getCantidad() << std::endl;
+      if (controladorProducto->obtenerProductoDisponible((*it2)->getId())->enviadoCorrectamente() == true)
+      {
+        std::cout << "Enviado: si"<< std::endl;
+      }
+      else
+      {
+        std::cout << "Enviado: no"<< std::endl;
+      }
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
     }
     std::cout << std::endl;
   };
-}
+
 int idProducto(std::string nickProducto, std::string nickVendedor) // funcion auxiliar
 {
   std::set<DTProducto *> productos = controladorProducto->obtenerProductosDisponibles();
@@ -233,22 +248,7 @@ int idProducto(std::string nickProducto, std::string nickVendedor) // funcion au
   };
   return 0;
 }
-void listarProductosNoEnviadosVendedor(std::string nickV) //funcion auxiliar
-{
-  {
-    std::set<DTProducto *> listaProductos = controladorUsuario->listarProductosVendedor(nickV);
-    for (auto it = listaProductos.begin(); it != listaProductos.end(); it++)
-    {
-      if (((*it)->enviadoCorrectamente()) == false)
-      {
-        int idProducto = (*it)->getId();
-        std::string nombreProducto = (*it)->getNombre();
-        std::cout << "Codigo: " << idProducto << ", Nombre: " << nombreProducto;
-        std::cout << std::endl;
-      }
-    }
-  }
-}
+
 bool estaEnCompra(int id, DTCompra *compra) //funcion auxiliar
 {
   if (compra->getRegistroProducto(id) != NULL)
@@ -264,6 +264,40 @@ void listarParClienteFechaDeCompra(DTCompra *compra)  //funcion auxiliar
             << compra->getFechaDeCompra()->getMes() << "/"
             << compra->getFechaDeCompra()->getAnio() << std::endl;
   std::cout << std::endl;
+}
+bool estaEnUnaCompra(DTProducto* producto)
+{
+  int id = producto->getId();
+  std::set<DTCompra*> compras = controladorCompra->getDataComprasExitosas();
+  for (auto it = compras.begin(); it != compras.end(); it++)
+  {
+    //estaEnCompra(id, (it))
+    if (((*it))->getRegistroProducto(id) != NULL)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////// 
+void listarProductosNoEnviadosVendedor(std::string nickV) //funcion auxiliar
+{
+  {
+    std::set<DTProducto*> listaProductos = controladorUsuario->listarProductosVendedor(nickV);
+    for (auto it = listaProductos.begin(); it != listaProductos.end(); it++)
+    {
+      if(estaEnUnaCompra((*it)))
+      {
+      if (((*it)->enviadoCorrectamente()) == false)
+        {
+          int idProducto = (*it)->getId();
+          std::string nombreProducto = (*it)->getNombre();
+          std::cout << "Codigo: " << idProducto << ", Nombre: " << nombreProducto;
+          std::cout << std::endl;
+        }
+      }
+    }
+  }
 }
 
 //------------------------------------------CARGA DE DATOS INICIALES-----------------------------------
@@ -1109,13 +1143,29 @@ void ConsultarPromocion() // Implementado //
     std::cout << std::endl;
     DTPromocion *promoElegida = controladorPromocion->getPromocion(nombrePromoElegida)->getDataPromocion();
     std::cout << "Informacion del vendedor de la promocion: " << std::endl;
-    DTVendedor *vendedorElegido = (promoElegida->getInfoVendedor());
+
+    std::set<DTVendedor*> vendedores = controladorUsuario->listarVendedores();
+    DTVendedor* vendedorElegido;
+    for(auto it = vendedores.begin(); it != vendedores.end();it++){
+      std::set<DTPromocion*> promosVendedor = (*it)->getPromociones();
+      for(auto it2 = promosVendedor.begin(); it2 != promosVendedor.end();it2++){
+        if(nombrePromoElegida == (*it2)->getNombre()){
+          vendedorElegido = (*it);
+          break;
+        }
+      }
+    } 
+    //DTVendedor *vendedorElegido = (promoElegida->getInfoVendedor());
     std::cout << "Nombre: " << vendedorElegido->getNickname() << std::endl
               << "Fecha de nacimiento" << vendedorElegido->getFechaNacimiento()->getDia() << vendedorElegido->getFechaNacimiento()->getMes() << vendedorElegido->getFechaNacimiento()->getAnio() << std::endl
               << "Codigo Rut: " << vendedorElegido->getCodigoRUT() << std::endl;
     std::cout << std::endl;
     std::cout << "Informacion de los productos de la promocion: " << std::endl;
-    ListarProductosDeVendedor(vendedorElegido->getNickname());
+    std::map<int,DTProductoPromo*> productosPromo = promoElegida->getProductos();
+    for(auto it = productosPromo.begin(); it != productosPromo.end();it++){
+      std::cout <<"Codigo: "<<(*it).second->getId()<<", Nombre: "<<(*it).second->getNombre()<<", Cantidad Minima: "<<(*it).second->getCantidadMinima()<<std::endl;
+    }
+    std::cout << std::endl;
   }
   else if (opcionElegida == 2)
   {
@@ -1318,6 +1368,13 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
   std::string nickCliente;
   std::cout << "Escriba el nickname del cliente al que desea enviar el producto." << std::endl;
   std::cin >> nickCliente;
+  std::set<DTCliente*> clientes = controladorUsuario->listarClientes();
+  while (!ExisteCliente(nickCliente, clientes))
+  {
+    std::cout << "El nombre del cliente no es valido" << std::endl;
+    std::cout << "Escriba el nickname del cliente al que desea enviar el producto." << std::endl;
+    std::cin >> nickCliente;
+  }
   std::cout << "Ingrese fecha de la compra (dia/mes/anio)" << std::endl;
   int dia;
   int mes;
@@ -1326,9 +1383,8 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
   std::cin >> mes;
   std::cin >> anio;
   DTFecha *fechaCompra = new DTFecha(dia, mes, anio);
-  // Se marca como enviado "idProducto" de la compra de "nickCliente" con fecha "fechaCompra"
-  // for (compras de nickCliente) if compra.fecha = fechaCompra actualizarEnvio(idProducto)
-  for (auto it2 = datoCliente(nickCliente)->getComprasPasadas().begin(); it2 != datoCliente(nickCliente)->getComprasPasadas().end(); it2++)
+  std::set<DTCompra*> aux = datoCliente(nickCliente)->getComprasPasadas();
+  for (auto it2 = aux.begin(); it2 != aux.end(); it2++)
   {
     if ((*it2)->getFechaDeCompra()->compararFecha(fechaCompra))
     {
@@ -1366,7 +1422,6 @@ void ExpedienteUsuario() // falta testear
   }
   else
   {
-    std::cout <<"Error3" << std::endl;
     DTVendedor *esVendedor = datoVendedor(nickUsuario);
     std::string nickVendedor = esVendedor->getNickname();
     DTFecha *fechaVendedor = esVendedor->getFechaNacimiento();
