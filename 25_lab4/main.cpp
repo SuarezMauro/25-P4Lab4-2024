@@ -1172,7 +1172,7 @@ void ConsultarPromocion() // Implementado //
   }
 }
 
-void RealizarCompra() // Implementado // Error al ingresar productos en promocion a la vez que productos fuera de promo (Aunque no esta en los casos de uso por lo que no es prioridad).
+void RealizarCompra() // Implementado //
 {
   // seleccion de cliente
   listarNickClientes();
@@ -1260,8 +1260,7 @@ void RealizarCompra() // Implementado // Error al ingresar productos en promocio
     std::cout << "Compra cancelada" << std::endl;
   }
 }
-                      // chequear comprar varios productos
-
+                     
 void DejarComentario() // faltan funciones//
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();

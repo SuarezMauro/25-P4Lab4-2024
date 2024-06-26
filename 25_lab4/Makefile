@@ -1,5 +1,5 @@
-Main: obj/Main.o obj/Fabrica.o obj/ControladorUsuario.o obj/ControladorProducto.o obj/ControladorPromocion.o obj/ControladorNotificacion.o obj/ControladorCompra.o obj/ControladorComentario.o obj/DTFecha.o obj/DTDireccion.o obj/DTUsuario.o obj/DTCliente.o obj/DTProducto.o obj/DTVendedor.o obj/DTNotificacion.o obj/DTComentario.o obj/DTRegistroProducto.o obj/DTProductoPromo.o obj/DTCompra.o	obj/DTPromocion.o obj/Producto.o obj/Vendedor.o	obj/Usuario.o	obj/Cliente.o	obj/Compra.o	obj/RegistroProducto.o obj/InfoPromoProducto.o	obj/Promocion.o	obj/Comentario.o		
-	g++ obj/Main.o obj/Fabrica.o obj/ControladorUsuario.o obj/ControladorProducto.o obj/ControladorPromocion.o obj/ControladorNotificacion.o obj/ControladorCompra.o obj/ControladorComentario.o obj/DTFecha.o obj/DTDireccion.o obj/DTUsuario.o obj/DTCliente.o obj/DTProducto.o obj/DTVendedor.o obj/DTNotificacion.o obj/DTComentario.o	obj/DTRegistroProducto.o obj/DTProductoPromo.o	obj/DTCompra.o	obj/DTPromocion.o obj/Producto.o obj/Vendedor.o	obj/Usuario.o	obj/Cliente.o obj/Compra.o	obj/RegistroProducto.o obj/InfoPromoProducto.o obj/Promocion.o obj/Comentario.o -o Main
+Main: obj/Main.o obj/Fabrica.o obj/ControladorUsuario.o obj/ControladorProducto.o obj/ControladorPromocion.o obj/ControladorNotificacion.o obj/ControladorCompra.o obj/ControladorComentario.o obj/DTFecha.o obj/DTDireccion.o obj/DTUsuario.o obj/DTCliente.o obj/DTProducto.o obj/DTVendedor.o obj/DTNotificacion.o obj/DTComentario.o obj/DTRegistroProducto.o obj/DTProductoPromo.o obj/DTCompra.o obj/DTPromocion.o obj/Producto.o obj/Vendedor.o obj/Usuario.o obj/Cliente.o obj/Compra.o obj/RegistroProducto.o obj/InfoPromoProducto.o obj/Promocion.o obj/Comentario.o
+	g++ obj/Main.o obj/Fabrica.o obj/ControladorUsuario.o obj/ControladorProducto.o obj/ControladorPromocion.o obj/ControladorNotificacion.o obj/ControladorCompra.o obj/ControladorComentario.o obj/DTFecha.o obj/DTDireccion.o obj/DTUsuario.o obj/DTCliente.o obj/DTProducto.o obj/DTVendedor.o obj/DTNotificacion.o obj/DTComentario.o obj/DTRegistroProducto.o obj/DTProductoPromo.o obj/DTCompra.o obj/DTPromocion.o obj/Producto.o obj/Vendedor.o obj/Usuario.o obj/Cliente.o obj/Compra.o obj/RegistroProducto.o obj/InfoPromoProducto.o obj/Promocion.o obj/Comentario.o -o Main
 
 obj/Main.o: Main.cpp
 	g++ -c Main.cpp -o obj/Main.o
@@ -89,4 +89,5 @@ obj/Comentario.o: src/Comentario.cpp include/Comentario.hh
 	g++ -c src/Comentario.cpp -o obj/Comentario.o
 
 clean:
-	del obj\*.o Main.exe
+	@if [ -d "obj" ]; then rm -f obj/*.o; fi
+	@if [ -f "Main.exe" ]; then rm -f Main.exe; fi
