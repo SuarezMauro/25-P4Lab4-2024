@@ -7,31 +7,28 @@
 #include <iostream>
 #include <set>
 
-class DTProducto;
-class DTComentario;
-
 class Comentario
 {
 private:
   int id;
   DTFecha *fecha;
-  std::string comentario;
+  std::string texto;
   std::string nickRemitente;
   std::set<Comentario *> respuestas;
-  Comentario *comentarioRespondido;
   DTProducto *infoProductoComentado;
 
 public:
-  bool esRespuesta();
   int getId();
   std::string getNickRemitente();
   DTProducto *getInfoProductoComentado();
-  Comentario *getComentarioRespondido();
   DTComentario *getDataComentario();
+  DTComentario *getDataType(); //Retorna comentario sin respuestas
+  std::set<Comentario *> getRespuestas();
   void agregarRespuesta(Comentario *);
   void eliminarRespuesta(Comentario *);
-  Comentario(int, DTFecha *, std::string, std::string, Comentario *, DTProducto *);
+  Comentario(int id, DTFecha * fecha, std::string texto, std::string nickRemitente, DTProducto * infoProductoComentado);
   ~Comentario();
+  std::string getTexto();
 };
 
 #endif

@@ -928,7 +928,7 @@ void NuevoVendedor() // Implementado //
       std::cin >> passUS;
     }
     int diaUS;
-    std::cout << "Escriba su dia de naciemiento" << std::endl;
+    std::cout << "Escriba su dia de nacimiento" << std::endl;
     std::cin >> diaUS;
     while (diaUS >= 32)
     {
@@ -936,7 +936,7 @@ void NuevoVendedor() // Implementado //
       std::cin >> diaUS;
     }
     int mesUS;
-    std::cout << "Escriba su mes de naciemiento" << std::endl;
+    std::cout << "Escriba su mes de nacimiento" << std::endl;
     std::cin >> mesUS;
     while (mesUS >= 13)
     {
@@ -944,7 +944,7 @@ void NuevoVendedor() // Implementado //
       std::cin >> mesUS;
     }
     int anioUS;
-    std::cout << "Escriba su anio de naciemiento" << std::endl;
+    std::cout << "Escriba su anio de nacimiento" << std::endl;
     std::cin >> anioUS;
     while (anioUS >= 2025)
     {
@@ -989,7 +989,7 @@ void NuevoCliente() // Implementado //
       std::cin >> passUS;
     }
     int diaUS;
-    std::cout << "Escriba su dia de naciemiento" << std::endl;
+    std::cout << "Escriba su dia de nacimiento" << std::endl;
     std::cin >> diaUS;
     while (diaUS >= 32)
     {
@@ -997,7 +997,7 @@ void NuevoCliente() // Implementado //
       std::cin >> diaUS;
     }
     int mesUS;
-    std::cout << "Escriba su mes de naciemiento" << std::endl;
+    std::cout << "Escriba su mes de nacimiento" << std::endl;
     std::cin >> mesUS;
     while (mesUS >= 13)
     {
@@ -1005,7 +1005,7 @@ void NuevoCliente() // Implementado //
       std::cin >> mesUS;
     }
     int anioUS;
-    std::cout << "Escriba su anio de naciemiento" << std::endl;
+    std::cout << "Escriba su anio de nacimiento" << std::endl;
     std::cin >> anioUS;
     while (anioUS >= 2025)
     {
@@ -1209,7 +1209,7 @@ void ConsultarPromocion() // Implementado //
     std::cout << "Ingrese el nombre de la promocion: ";
     std::cout << std::endl;
     std::string nombrePromoElegida;
-    std::cin >> nombrePromoElegida;
+    std::getline(std::cin >> std::ws, nombrePromoElegida);
     std::cout << std::endl;
     DTPromocion *promoElegida = controladorPromocion->getPromocion(nombrePromoElegida)->getDataPromocion();
     std::cout << "Informacion del vendedor de la promocion: " << std::endl;
@@ -1227,7 +1227,7 @@ void ConsultarPromocion() // Implementado //
     } 
     //DTVendedor *vendedorElegido = (promoElegida->getInfoVendedor());
     std::cout << "Nombre: " << vendedorElegido->getNickname() << std::endl
-              << "Fecha de nacimiento" << vendedorElegido->getFechaNacimiento()->getDia() << vendedorElegido->getFechaNacimiento()->getMes() << vendedorElegido->getFechaNacimiento()->getAnio() << std::endl
+              << "Fecha de nacimiento: " << vendedorElegido->getFechaNacimiento()->getDia() << "/" << vendedorElegido->getFechaNacimiento()->getMes() << "/" << vendedorElegido->getFechaNacimiento()->getAnio() << std::endl
               << "Codigo Rut: " << vendedorElegido->getCodigoRUT() << std::endl;
     std::cout << std::endl;
     std::cout << "Informacion de los productos de la promocion: " << std::endl;
