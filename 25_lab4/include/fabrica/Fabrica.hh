@@ -5,7 +5,7 @@
 #include "../controladores/ControladorCompra.hh"
 #include "../controladores/ControladorProducto.hh"
 #include "../controladores/ControladorPromocion.hh"
-#include "../controladores/ControladorNotificacion.hh"
+#include "../controladores/ControladorComentario.hh"
 
 class Fabrica
 {
@@ -14,7 +14,7 @@ public:
   static IControladorCompra *getInterfazCompra();
   static IControladorProducto *getInterfazProducto();
   static IControladorPromocion *getInterfazPromocion();
-  static IControladorNotificacion *getInterfazNotificacion();
+  static IControladorComentario *getInterfazComentario();
 };
 
 #endif

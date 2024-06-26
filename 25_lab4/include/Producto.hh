@@ -1,12 +1,15 @@
 #ifndef PRODUCTO
 #define PRODUCTO
 #include <iostream>
+#include "./datatypes/DTComentario.hh"
 #include "./datatypes/DTProducto.hh"
 #include "./datatypes/DTVendedor.hh"
 #include "./TipoProducto.hh"
+#include "./Comentario.hh"
 #include "./Promocion.hh"
 #include "./Vendedor.hh"
 
+class Comentario;
 class Promocion;
 class Vendedor;
 
@@ -22,6 +25,7 @@ private:
   TipoProducto tipo;
   Vendedor *vendedor;
   Promocion *promocion;
+  std::set<Comentario *> comentarios;
 
 public:
   int getId();
@@ -34,6 +38,7 @@ public:
   TipoProducto getTipoProducto();
   DTProducto *getDataProducto();
   Promocion *getPromocion();
+  std::set<DTComentario *> listarComentarios();
   void setId(int);
   void setNombre(std::string);
   void setDescrpcion(std::string);
@@ -43,6 +48,8 @@ public:
   void setTipoProducto(TipoProducto);
   void addPromocion(Promocion *);
   void setVendedor(Vendedor *);
+  void añadirComentario(Comentario *);
+  void eliminarComentario(Comentario *);
   Producto(int, std::string, std::string, float, int, TipoProducto, Vendedor *);
   ~Producto();
   void setPrint(std::ostream &out); // Sobrecarga de operador '<<'

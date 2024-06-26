@@ -16,18 +16,20 @@ private:
   ControladorUsuario();
 
 public:
-  static ControladorUsuario *getInstancia();                                              // Implementado
-  Cliente *getCliente(std::string);                                                       // Implementado
-  Vendedor *getVendedor(std::string);                                                     // Implementado
+  static ControladorUsuario *getInstancia(); // Implementado
+  Cliente *getCliente(std::string);          // Implementado
+  Vendedor *getVendedor(std::string);        // Implementado
+  Usuario *getUsuario(std::string);
   void altaNuevoCliente(std::string, std::string, DTFecha *, DTDireccion *, std::string); // Implementado
   void altaNuevoVendedor(std::string, std::string, DTFecha *, std::string);               // Implementado
   void realizarSuscripciones(std::string, std::set<std::string>);                         // Implementado
   void eliminarSuscripciones(std::string, std::set<std::string>);                         // Implementado
-  std::set<DTUsuario *> listarUsuarios();                                                 // Implementado
-  std::set<DTCliente *> listarClientes();                                                 // Implementado
-  std::set<DTVendedor *> listarVendedores();                                              // Implementado
-  std::set<DTVendedor *> listarVendedoresNoSuscritos(std::string);                        // Implementado
-  std::set<DTProducto *> listarProductosVendedor(std::string);                            // Implementado
+  void eliminarNotificaciones(std::string);
+  std::set<DTUsuario *> listarUsuarios();                          // Implementado
+  std::set<DTCliente *> listarClientes();                          // Implementado
+  std::set<DTVendedor *> listarVendedores();                       // Implementado
+  std::set<DTVendedor *> listarVendedoresNoSuscritos(std::string); // Implementado
+  std::set<DTProducto *> listarProductosVendedor(std::string);     // Implementado
   std::set<DTNotificacion *> listarNotificaciones(std::string);
   std::set<DTVendedor *> listarSuscripciones(std::string);
   std::set<DTComentario *> listarComentariosUsuario(std::string);
