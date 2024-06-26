@@ -152,8 +152,9 @@ std::set<DTVendedor *> ControladorUsuario::listarSuscripciones(std::string nickC
 {
   std::set<DTVendedor *> retorno;
   Cliente* cliente = getCliente(nickCliente);
-  if (!cliente->getSuscripciones().empty()){
-    for (auto it = cliente->getSuscripciones().begin(); it != cliente->getSuscripciones().end(); it++){
+  std::set<DTVendedor*> aux = cliente->getSuscripciones();
+  if (!aux.empty()){
+    for (auto it = aux.begin(); it != aux.end(); it++){
       retorno.insert(*it);
     }
   }
