@@ -10,7 +10,7 @@ DTVendedor *Vendedor::getDataVendedor()
   for(auto it = promociones.begin(); it != promociones.end();it++){
     datapromos.insert((*it)->getDataPromocion());
   }
-  DTVendedor *dataVendedor = new DTVendedor(getNickname(), getFechaNacimiento(), codigoRUT,datapromos);
+  DTVendedor *dataVendedor = new DTVendedor(getNickname(), getFechaNacimiento(), codigoRUT,datapromos, suscriptores);
   return dataVendedor;
 }
 DTProducto *Vendedor::getDataProducto(int id)
@@ -27,6 +27,9 @@ DTProducto *Vendedor::getDataProducto(int id)
   }
   return dataProducto;
 }
+std::set<DTCliente *> Vendedor::getSuscriptores(){
+  return suscriptores;
+};
 void Vendedor::añadirPromocion(Promocion *promocion)
 {
   promociones.insert(promocion);
@@ -35,7 +38,7 @@ void Vendedor::añadirProducto(Producto *producto)
 {
   productos.insert(producto);
 }
-void Vendedor::añadirSuscriptor(Cliente *suscriptor)
+void Vendedor::añadirSuscriptor(DTCliente *suscriptor)
 {
   suscriptores.insert(suscriptor);
 }
@@ -47,7 +50,7 @@ void Vendedor::removerProducto(Producto *producto)
 {
   productos.erase(producto);
 }
-void Vendedor::removerSuscriptor(Cliente *suscriptor)
+void Vendedor::removerSuscriptor(DTCliente *suscriptor)
 {
   suscriptores.erase(suscriptor);
 }

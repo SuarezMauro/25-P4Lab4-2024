@@ -21,7 +21,7 @@ public:
   virtual Usuario *getUsuario(std::string) = 0;
   virtual void altaNuevoCliente(std::string, std::string, DTFecha *, DTDireccion *, std::string) = 0;
   virtual void altaNuevoVendedor(std::string, std::string, DTFecha *, std::string) = 0;
-  virtual void realizarSuscripciones(std::string, std::set<std::string>) = 0;
+  virtual void realizarSuscripcion(std::string, std::string) = 0;
   virtual void eliminarSuscripciones(std::string, std::set<std::string>) = 0;
   virtual void eliminarNotificaciones(std::string) = 0;
   virtual std::set<DTUsuario *> listarUsuarios() = 0;
@@ -31,7 +31,8 @@ public:
   virtual std::set<DTProducto *> listarProductosVendedor(std::string) = 0;
   virtual std::set<DTNotificacion *> listarNotificaciones(std::string) = 0;
   virtual std::set<DTVendedor *> listarSuscripciones(std::string) = 0;
-  virtual std::set<DTComentario *> listarComentariosUsuario(std::string) = 0;
+  //virtual std::set<DTComentario *> listarComentariosUsuario(std::string) = 0;
+  virtual std::set<DTCliente *> listarSuscriptores(std::string) = 0;
 
   virtual std::set<DTVendedor *> listarVendedoresSuscritos(std::string) = 0;
   // virtual void RegistroNuevoProducto(std::string nickVendedor, Producto *producto) = 0;

@@ -20,7 +20,6 @@ int ControladorComentario::getNuevoID()
   nuevoID++;
   return nuevoID;
 }
-
 std::set<DTComentario *> ControladorComentario::listarComentariosUsuario(std::string nickname)
 {
   std::set<DTComentario *> listaComentarios;
@@ -28,7 +27,6 @@ std::set<DTComentario *> ControladorComentario::listarComentariosUsuario(std::st
   listaComentarios = usuario->listarComentarios();
   return listaComentarios;
 }
-
 std::set<DTComentario *> ControladorComentario::listarComentariosProducto(int id)
 {
   std::set<DTComentario *> listaComentarios;

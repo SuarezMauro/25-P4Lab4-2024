@@ -10,14 +10,21 @@ void ControladorUsuario::altaNuevoVendedor(std::string nickname, std::string pas
   Vendedor *nuevoVendedor = new Vendedor(nickname, password, fechaNacimiento, codigoRUT);
   vendedores.insert(nuevoVendedor);
 }
-void ControladorUsuario::realizarSuscripciones(std::string nickCliente, std::set<std::string> nicksVendedores)
+void ControladorUsuario::realizarSuscripcion(std::string nickCliente, std::string nickVendedor)
 {
-  Cliente *usuario = getCliente(nickCliente);
-  for (std::set<std::string>::iterator nickVendedor = nicksVendedores.begin(); nickVendedor != nicksVendedores.end(); nickVendedor++)
+  Cliente *cliente = getCliente(nickCliente);
+  DTCliente* dataCliente = cliente->getDataCliente();
+  Vendedor *vendedor = getVendedor(nickVendedor);
+  DTVendedor* dataVendedor = vendedor->getDataVendedor();
+  cliente->añadirSuscripcion(dataVendedor);
+  vendedor->añadirSuscriptor(dataCliente);
+
+  /*for (std::set<std::string>::iterator nickVendedor = nicksVendedores.begin(); nickVendedor != nicksVendedores.end(); nickVendedor++)
   {
     Vendedor *suscripcion = getVendedor(*nickVendedor);
     usuario->añadirSuscripcion(suscripcion);
-  }
+    suscripcion->añadirSuscriptor(usuario);
+  }*/
 }
 void ControladorUsuario::eliminarSuscripciones(std::string nickCliente, std::set<std::string> nicksVendedores)
 {
@@ -25,7 +32,8 @@ void ControladorUsuario::eliminarSuscripciones(std::string nickCliente, std::set
   for (std::set<std::string>::iterator nickVendedor = nicksVendedores.begin(); nickVendedor != nicksVendedores.end(); nickVendedor++)
   {
     Vendedor *suscripcion = getVendedor(*nickVendedor);
-    usuario->removerSuscripcion(suscripcion);
+    DTVendedor* datasuscripcion = suscripcion->getDataVendedor();
+    usuario->removerSuscripcion(datasuscripcion);
   }
 }
 void ControladorUsuario::eliminarNotificaciones(std::string nickCliente)
@@ -109,18 +117,19 @@ std::set<DTVendedor *> ControladorUsuario::listarVendedoresNoSuscritos(std::stri
 {
   std::set<DTVendedor *> listaNoSuscritos = listarVendedores();
   Cliente *usuario = getCliente(nickname);
-  std::set<Vendedor *> suscripcionesUsuario = usuario->getSuscripciones();
-  for (std::set<Vendedor *>::iterator it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
+  std::set<DTVendedor *> suscripcionesUsuario = usuario->getSuscripciones();
+  for (auto it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
   {
     std::string nickSuscripcion = (*it)->getNickname();
     bool encontrado = false;
-    for (std::set<DTVendedor *>::iterator dt = listaNoSuscritos.begin(); (dt != listaNoSuscritos.end()) && !encontrado; dt++)
+    for (auto dt = listaNoSuscritos.begin(); (dt != listaNoSuscritos.end()) && !encontrado; dt++)
     {
       if ((*dt)->getNickname() == nickSuscripcion)
       {
         DTVendedor *aBorrar = *dt;
         listaNoSuscritos.erase(aBorrar);
-        delete aBorrar;
+        //delete aBorrar; //tira error aca
+        encontrado = true; ///////////////////
       }
     }
   }
@@ -133,14 +142,22 @@ std::set<DTProducto *> ControladorUsuario::listarProductosVendedor(std::string n
   std::set<DTProducto *> listaProductos = vendedor->listarProductos();
   return listaProductos;
 }
-std::set<DTNotificacion *> ControladorUsuario::listarNotificaciones(std::string)
+std::set<DTNotificacion *> ControladorUsuario::listarNotificaciones(std::string nickCliente)
 {
-  std::set<DTNotificacion *> retorno;
+  Cliente* cliente = getCliente(nickCliente);
+  std::set<DTNotificacion *> retorno = cliente->getNotificaciones();
   return retorno;
 }
-std::set<DTVendedor *> ControladorUsuario::listarSuscripciones(std::string)
+std::set<DTVendedor *> ControladorUsuario::listarSuscripciones(std::string nickCliente)
 {
-  return std::set<DTVendedor *>();
+  std::set<DTVendedor *> retorno;
+  Cliente* cliente = getCliente(nickCliente);
+  if (!cliente->getSuscripciones().empty()){
+    for (auto it = cliente->getSuscripciones().begin(); it != cliente->getSuscripciones().end(); it++){
+      retorno.insert(*it);
+    }
+  }
+  return retorno;
 }
 std::set<DTComentario *> ControladorUsuario::listarComentariosUsuario(std::string)
 {
@@ -162,15 +179,23 @@ std::set<DTVendedor *> ControladorUsuario::listarVendedoresSuscritos(std::string
 {
   std::set<DTVendedor *> listaSuscritos;
   Cliente *usuario = getCliente(nickname);
-  std::set<Vendedor *> suscripcionesUsuario = usuario->getSuscripciones();
-  for (std::set<Vendedor *>::iterator it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
+  std::set<DTVendedor *> suscripcionesUsuario = usuario->getSuscripciones();
+  for (std::set<DTVendedor *>::iterator it = suscripcionesUsuario.begin(); it != suscripcionesUsuario.end(); it++)
   {
-    DTVendedor *aInsertar = (*it)->getDataVendedor();
-    listaSuscritos.insert(aInsertar);
+    listaSuscritos.insert(*it);
   };
   return listaSuscritos;
 }
-
+std::set<DTCliente *> ControladorUsuario::listarSuscriptores(std::string nickname){
+  std::set<DTCliente *> listaSuscriptores;
+  Vendedor *vendedor = getVendedor(nickname);
+  std::set<DTCliente *> suscriptores = vendedor->getSuscriptores();
+  for (std::set<DTCliente *>::iterator it = suscriptores.begin(); it != suscriptores.end(); it++)
+  {
+    listaSuscriptores.insert(*it);
+  };
+  return listaSuscriptores;
+};
 /*void ControladorUsuario::RegistroNuevoProducto(std::string nickVendedor, Producto *producto)
 {
   Vendedor *vendedor = getVendedor(nickVendedor);

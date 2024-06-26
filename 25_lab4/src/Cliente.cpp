@@ -8,7 +8,7 @@ std::string Cliente::getCiudadDeResidencia()
 {
   return ciudadDeResidencia;
 }
-std::set<Vendedor *> Cliente::getSuscripciones()
+std::set<DTVendedor *> Cliente::getSuscripciones()
 {
   return suscripciones;
 }
@@ -18,9 +18,12 @@ std::set<DTCompra *> Cliente::getComprasPasadas()
 }
 DTCliente *Cliente::getDataCliente()
 {
-  DTCliente *dataCliente = new DTCliente(getNickname(), getFechaNacimiento()->copiarFecha(), direccion->copiarDireccion(), ciudadDeResidencia, comprasPasadas);
+  DTCliente *dataCliente = new DTCliente(getNickname(), getFechaNacimiento()->copiarFecha(), direccion->copiarDireccion(), ciudadDeResidencia, comprasPasadas, suscripciones, notificaciones);
   return dataCliente;
 }
+std::set<DTNotificacion *> Cliente::getNotificaciones(){
+  return notificaciones;
+};
 void Cliente::añadirCompra(DTCompra *compra)
 {
   comprasPasadas.insert(compra);
@@ -29,11 +32,11 @@ void Cliente::removerCompra(DTCompra *compra)
 {
   comprasPasadas.erase(compra);
 }
-void Cliente::añadirSuscripcion(Vendedor *suscripcion)
+void Cliente::añadirSuscripcion(DTVendedor *suscripcion)
 {
   suscripciones.insert(suscripcion);
 }
-void Cliente::removerSuscripcion(Vendedor *suscripcion)
+void Cliente::removerSuscripcion(DTVendedor *suscripcion)
 {
   suscripciones.erase(suscripcion);
 }

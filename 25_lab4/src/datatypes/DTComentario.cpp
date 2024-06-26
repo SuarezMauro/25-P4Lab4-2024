@@ -1,5 +1,9 @@
 #include "../../include/datatypes/DTComentario.hh"
 
+bool DTComentario::esRespuesta()
+{
+  return comentarioRespondido != NULL;
+}
 int DTComentario::getId()
 {
   return id;
@@ -20,7 +24,6 @@ std::set<DTComentario *> DTComentario::getInfoRespuestas()
 {
   return respuestas;
 }
-
 DTProducto *DTComentario::getInfoProductoComentado()
 {
   return productoComentado;

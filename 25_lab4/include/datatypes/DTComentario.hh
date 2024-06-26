@@ -17,6 +17,7 @@ private:
   DTProducto *productoComentado;
 
 public:
+  bool esRespuesta();
   int getId();
   DTFecha *getFecha();
   std::string getComentario();

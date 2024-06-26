@@ -11,13 +11,22 @@ std::string DTCliente::getCiudadDeResidencia()
 std::set<DTCompra *> DTCliente::getComprasPasadas()
 {
   return comprasPasadas;
-};
-DTCliente::DTCliente(std::string nickname, DTFecha *fechaNacimiento, DTDireccion *direccion, std::string ciudadDeResidencia,std::set<DTCompra *> comprasPasadas)
+}
+std::set<DTNotificacion *> DTCliente::getNotificaciones(){
+  return notificaciones;
+}
+std::set<DTVendedor *> DTCliente::getSuscripciones()
+{
+  return suscripciones;
+}
+DTCliente::DTCliente(std::string nickname, DTFecha *fechaNacimiento, DTDireccion *direccion, std::string ciudadDeResidencia,std::set<DTCompra *> comprasPasadas, std::set<DTVendedor *> susc, std::set<DTNotificacion *> notifi)
     : DTUsuario(nickname, fechaNacimiento)
 {
   this->direccion = direccion;
   this->ciudadDeResidencia = ciudadDeResidencia;
   this->comprasPasadas = comprasPasadas;
+  this->notificaciones = notifi;
+  this->suscripciones = susc;
 }
 DTCliente::~DTCliente()
 {
