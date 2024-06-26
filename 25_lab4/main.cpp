@@ -132,6 +132,7 @@ void listarNickUsuarios()
 }
 void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
 {
+  std::cout << "Productos: "<< std::endl;
   std::set<DTProducto *> listaProductos = controladorUsuario->listarProductosVendedor(nickname);
   for (auto it = listaProductos.begin(); it != listaProductos.end(); it++)
   {
@@ -140,6 +141,7 @@ void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
     std::cout << "Codigo: " << idProducto << ", Nombre: " << nombreProducto;
     std::cout << std::endl;
   }
+  std::cout << std::endl;
 }
 void imprimirInfoProducto(DTProducto *producto)
 {
@@ -188,15 +190,13 @@ void ListarPromosVigentesVendedor(DTVendedor *vendedor) // funcion auxiliar
     std::cout << "Nombre: " << (*it)->getNombre() << std::endl
               << "Descripcion: " << (*it)->getDescripcion() << std::endl
               << "Fecha de vencimiento: " << dia << "/" << mes << "/" << anio << std::endl;
-    std::cout << std::endl;
     std::cout << "Productos: " << std::endl;
     std::map<int,DTProductoPromo*> aux2 = (*it)->getProductos();
     for (auto it2 = aux2.begin(); it2 != aux2.end(); it2++)
     {
-      std::cout << "Codigo: " << (*it2).second->getId() << std::endl
+      std::cout << "ID: " << (*it2).second->getId() << std::endl
                 << "Nombre: " << (*it2).second->getNombre() << std::endl
-                << "Cantidad minima para aprovechar la promocion: " << (*it2).second->getCantidadMinima() << std::endl
-                << std::endl;
+                << "Cantidad minima para aprovechar la promocion: " << (*it2).second->getCantidadMinima() << std::endl;
     }
     std::cout << std::endl;
   };
@@ -204,6 +204,7 @@ void ListarPromosVigentesVendedor(DTVendedor *vendedor) // funcion auxiliar
 void ListarComprasRealizadas(DTCliente *cliente) // funcion auxiliar
 {
   std::cout << "Compras realizadas:" << std::endl;
+  std::cout << std::endl;
   std::set<DTCompra*> aux = cliente->getComprasPasadas();
   for (auto it = aux.begin(); it != aux.end(); ++it)
   {
@@ -212,7 +213,6 @@ void ListarComprasRealizadas(DTCliente *cliente) // funcion auxiliar
     int anio = ((*it)->getFechaDeCompra())->getAnio();
     std::cout << "Fecha de compra: " << dia << "/" << mes << "/" << anio << std::endl
               << "Monto final: " << (*it)->getMontoFinal() << std::endl;
-   std::cout << std::endl;
    std::cout << "Productos: " << std::endl;
    std::set<DTRegistroProducto*> aux1 = (*it)->getRegistroProductos();
    for (auto it2 = aux1.begin(); it2 != aux1.end(); it2++)
@@ -229,7 +229,6 @@ void ListarComprasRealizadas(DTCliente *cliente) // funcion auxiliar
       {
         std::cout << "Enviado: no"<< std::endl;
       }
-      std::cout << std::endl;
     }
     std::cout << std::endl;
     }
@@ -1386,12 +1385,18 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
   std::set<DTCompra*> aux = datoCliente(nickCliente)->getComprasPasadas();
   for (auto it2 = aux.begin(); it2 != aux.end(); it2++)
   {
-    if ((*it2)->getFechaDeCompra()->compararFecha(fechaCompra))
+    if ((*it2)->getFechaDeCompra()->compararFecha(fechaCompra) == 0)
     {
       controladorProducto->enviarProd(controladorProducto->getProducto(idProducto));
       std::cout << "Producto Enviado Correctamente" << std::endl;
-      break; // Agregue Break para cortar iteracion luego de enviado el producto
+      break;
     }
+  }
+  if(controladorProducto->getProducto(idProducto)->enviadoCorrectamente() == false)
+  {
+    std::cout << "No se ha encontrado una compra con la fecha ingresada" << std::endl;
+    std::cout << "El producto NO ha sido enviado" << std::endl;
+    std::cout << std::endl;
   }
 }
 
