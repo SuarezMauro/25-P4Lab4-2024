@@ -1250,7 +1250,6 @@ void ConsultarPromocion() // Implementado //
     return;
   }
 }
-
 void RealizarCompra() // Implementado // Error al ingresar productos en promocion a la vez que productos fuera de promo (Aunque no esta en los casos de uso por lo que no es prioridad).
 {
   // seleccion de cliente
@@ -1340,7 +1339,6 @@ void RealizarCompra() // Implementado // Error al ingresar productos en promocio
   }
 }
                       // chequear comprar varios productos
-
 void DejarComentario() // Implemento
 {
   listarNickUsuarios();
@@ -1432,7 +1430,6 @@ void DejarComentario() // Implemento
     std::cout << "Opcion invalida" << std::endl;
   }
 }
-
 void EliminarComentario() // Implementado //
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
@@ -1462,7 +1459,6 @@ void EliminarComentario() // Implementado //
     std::cout << "El usuario ingresado no posee comentarios." << std::endl;
   }
 }
-
 void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima los productos con envios pendientes.
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
@@ -1525,7 +1521,6 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
     std::cout << std::endl;
   }
 }
-
 void ExpedienteUsuario() // falta testear
 {
   ListarUsuarios();
