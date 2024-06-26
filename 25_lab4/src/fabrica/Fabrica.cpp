@@ -16,7 +16,7 @@ IControladorPromocion *Fabrica::getInterfazPromocion()
 {
   return ControladorPromocion::getInstancia();
 }
-IControladorNotificacion *Fabrica::getInterfazNotificacion()
+IControladorComentario *Fabrica::getInterfazComentario()
 {
-  return ControladorNotificacion::getInstancia();
+  return ControladorComentario::getInstancia();
 }

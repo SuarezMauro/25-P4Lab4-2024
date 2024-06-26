@@ -1,20 +1,29 @@
 #ifndef DTCOMENTARIO
 #define DTCOMENTARIO
-#include "DTFecha.hh"
+#include "./DTFecha.hh"
+#include "./DTProducto.hh"
+#include "./DTUsuario.hh"
 #include <iostream>
+#include <set>
 
 class DTComentario
 {
 private:
   int id;
   DTFecha *fecha;
-  std::string texto;
+  std::string comentario;
+  std::string nickRemitente;
+  std::set<DTComentario *> respuestas;
+  DTProducto *productoComentado;
 
 public:
   int getId();
   DTFecha *getFecha();
-  std::string getTexto();
-  DTComentario(int, DTFecha *, std::string);
+  std::string getComentario();
+  std::string getNickRemitente();
+  std::set<DTComentario *> getInfoRespuestas();
+  DTProducto *getInfoProductoComentado();
+  DTComentario(int, DTFecha *, std::string, std::string, std::set<DTComentario *>, DTProducto *);
   ~DTComentario();
   void setPrint(std::ostream &out); // Sobrecarga de operador '<<'
 };

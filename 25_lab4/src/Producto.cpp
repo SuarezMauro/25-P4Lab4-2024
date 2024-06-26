@@ -36,6 +36,16 @@ Promocion *Producto::getPromocion()
 {
   return promocion;
 }
+std::set<DTComentario *> Producto::listarComentarios()
+{
+  std::set<DTComentario *> listaComentarios;
+  for (std::set<Comentario *>::iterator it = comentarios.begin(); it != comentarios.end(); it++)
+  {
+    DTComentario *dataComentario = (*it)->getDataComentario();
+    listaComentarios.insert(dataComentario);
+  }
+  return listaComentarios;
+}
 DTProducto *Producto::getDataProducto()
 {
   DTVendedor *infoVendedor = vendedor->getDataVendedor();
@@ -59,13 +69,13 @@ void Producto::setPrecio(float pr)
 {
   precio = pr;
 }
-void Producto::setCantidadEnStock(int cant)
-{
-  cantidadEnStock = cant;
-}
 void Producto::setEnviado(bool e)
 {
   enviado = e;
+}
+void Producto::setCantidadEnStock(int cant)
+{
+  cantidadEnStock = cant;
 }
 void Producto::setTipoProducto(TipoProducto t)
 {
@@ -84,6 +94,14 @@ void Producto::setVendedor(Vendedor *v)
 void Producto::addPromocion(Promocion *promocion)
 {
   this->promocion = promocion;
+}
+void Producto::añadirComentario(Comentario *comentario)
+{
+  comentarios.insert(comentario);
+}
+void Producto::eliminarComentario(Comentario *comentario)
+{
+  comentarios.erase(comentario);
 }
 Producto::Producto(int id, std::string nombre, std::string descripcion, float precio, int cantidad, TipoProducto tipo, Vendedor *vendedor)
 {

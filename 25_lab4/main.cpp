@@ -10,6 +10,7 @@ IControladorUsuario *controladorUsuario = Fabrica::getInterfazUsuario();
 IControladorProducto *controladorProducto = Fabrica::getInterfazProducto();
 IControladorPromocion *controladorPromocion = Fabrica::getInterfazPromocion();
 IControladorCompra *controladorCompra = Fabrica::getInterfazCompra();
+IControladorComentario *controladorComentario = Fabrica::getInterfazComentario();
 
 //--------------------------------------FUNCIONES AUXILIARES----------------------------------------------------
 bool ExisteUsuario(std::string nickname) // funcion auxiliar
@@ -46,6 +47,37 @@ bool ExisteCliente(std::string nickname, std::set<DTCliente *> clientes) // func
   }
   return false;
 }
+bool ExisteProducto(int id){
+  std::set<DTProducto*> productos = controladorProducto->obtenerProductosDisponibles();
+  for (auto it = productos.begin(); it != productos.end(); it++)
+  {
+    if ((*it)->getId() == id)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool ExisteComentario(std::set<DTComentario*> comentarios, int IdComentario) // funcion auxiliar
+{
+  for (auto it = comentarios.begin(); it != comentarios.end(); it++)
+  { 
+    if ((*it)->getId() == IdComentario)
+    {
+      return true;
+    }
+    if(!(*it)->getInfoRespuestas().empty()) {
+      if (ExisteComentario((*it)->getInfoRespuestas(), IdComentario) ) 
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
 DTVendedor *datoVendedor(std::string nickname) // funcion auxiliar
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
@@ -70,7 +102,7 @@ DTCliente *datoCliente(std::string nickname) // funcion auxiliar
   }
   return nullptr;
 }
-void listarInfoVendedores(std::set<DTVendedor *> vendedores)
+void listarInfoVendedores(std::set<DTVendedor *> vendedores) // funcion auxiliar
 {
   for (auto it = vendedores.begin(); it != vendedores.end(); it++)
   {
@@ -84,7 +116,7 @@ void listarInfoVendedores(std::set<DTVendedor *> vendedores)
     std::cout << std::endl;
   }
 }
-void listarInfoClientes(std::set<DTCliente *> clientes)
+void listarInfoClientes(std::set<DTCliente *> clientes) // funcion auxiliar
 {
   for (auto it = clientes.begin(); it != clientes.end(); it++)
   {
@@ -120,7 +152,7 @@ void listarNickClientes() // funcion auxiliar
     std::cout << std::endl;
   }
 }
-void listarNickUsuarios()
+void listarNickUsuarios() // funcion auxiliar
 {
   std::set<DTUsuario *> usuarios = controladorUsuario->listarUsuarios();
   for (auto it = usuarios.begin(); it != usuarios.end(); it++)
@@ -143,6 +175,29 @@ void ListarProductosDeVendedor(std::string nickname) // funcion auxiliar
   }
   std::cout << std::endl;
 }
+
+
+bool listarComentarios(std::set<DTComentario *> comentariosProducto) // funcion auxiliar
+{
+  if (comentariosProducto.empty()){
+    return false;
+  } 
+  else 
+  {
+    for (auto it = comentariosProducto.begin(); it != comentariosProducto.end(); it++)
+    { 
+      std::cout << "ID: " <<(*it)->getId() << ", " << (*it)->getFecha()->toString() << ", '" << (*it)->getComentario() << "'";
+      std::cout << std::endl;
+      if(!(*it)->getInfoRespuestas().empty())
+      {
+        listarComentarios( (*it)->getInfoRespuestas() ) ;
+      }
+    }
+  }
+  return true;
+};
+
+
 void imprimirInfoProducto(DTProducto *producto)
 {
   int precioProducto = producto->getPrecio();
@@ -657,180 +712,204 @@ void CargarDatos()
   // void comentarProducto(std::string, DTFecha, int, std::string);
   // void responderComentario(std::string, DTFecha , int, std::string);
 
+
+  //controladorComentario->responderComentario(texto, fechahoy,idComentarioAResponder,nickUsuario);
+  //controladorComentario->comentarProducto(texto,fechahoy,idDelProducto,nickUsuario);
+
   // CM 1 - Comentario 1 - comentario a PR1
   std::string textoCM1 = "¿La camiseta azul esta disponible en talla M?";
   DTFecha *fechaComentarioCM1 = new DTFecha(01, 06, 2024);
   int idCM1PR1 = idProducto(nombrePR1, nickUS2);
   std::string userComentarioCM1 = nickUS1;
-  // controladorComentario->comentarProducto(textoCM1, fechaComentarioCM1, idCM1PR1, userComentarioCM1);
+  controladorComentario->comentarProducto(textoCM1,fechaComentarioCM1,idCM1PR1,userComentarioCM1);
+
 
   // CM 2 - Comentario 2 - respuesta a CM1
   std::string textoCM2 = "Si, tenemos la camiseta azul en talla M.";
   DTFecha *fechaComentarioCM2 = new DTFecha(01, 06, 2024);
-  int idCM2PR1 = idProducto(nombrePR1, nickUS2);
-  std::string userComentarioCM2 = nickUS2;
-  // controladorComentario->responderComentario(textoCM2, fechaComentarioCM2, idCM2PR1, userComentarioCM2);
+  //int idCM2PR1 = idProducto(nombrePR1, nickUS2);
+  std::string userComentarioCM2 = nickUS2; 
+  int idComentarioCM2 = controladorComentario->getIdComentario(textoCM1);
+  controladorComentario->responderComentario(textoCM2, fechaComentarioCM2,idComentarioCM2,userComentarioCM2);
 
   // CM 3 - Comentario 3 - respuesta a CM2
   std::string textoCM3 = "¿Es de buen material? Me preocupa la durabilidad.";
   DTFecha *fechaComentarioCM3 = new DTFecha(02, 06, 2024);
-  int idCM3PR1 = idProducto(nombrePR1, nickUS2);
+  //int idCM3PR1 = idProducto(nombrePR1, nickUS2);
   std::string userComentarioCM3 = nickUS5;
-  // controladorComentario->responderComentario(textoCM3, fechaComentarioCM3, idCM3PR1, userComentarioCM3);
+  int idComentarioCM3 = controladorComentario->getIdComentario(textoCM2);
+  controladorComentario->responderComentario(textoCM3, fechaComentarioCM3,idComentarioCM3,userComentarioCM3);
 
   // CM 4 - Comentario 4 - respuesta a CM3
   std::string textoCM4 = "He comprado antes y la calidad es buena.";
   DTFecha *fechaComentarioCM4 = new DTFecha(02, 06, 2024);
-  int idCM4PR1 = idProducto(nombrePR1, nickUS2);
+  //int idCM4PR1 = idProducto(nombrePR1, nickUS2);
   std::string userComentarioCM4 = nickUS4;
-  // controladorComentario->responderComentario(textoCM4, fechaComentarioCM4, idCM4PR1, userComentarioCM4);
+  int idComentarioCM4 = controladorComentario->getIdComentario(textoCM3);
+  controladorComentario->responderComentario(textoCM4, fechaComentarioCM4,idComentarioCM4,userComentarioCM4);
 
   // CM 5 - Comentario 5 - comentario a PR1
   std::string textoCM5 = "¿Como es el ajuste? ¿Es ajustada o holgada?";
   DTFecha *fechaComentarioCM5 = new DTFecha(02, 06, 2024);
   int idCM5PR1 = idProducto(nombrePR1, nickUS2);
   std::string userComentarioCM5 = nickUS7;
-  // controladorComentario->comentarProducto(textoCM5, fechaComentarioCM5, idCM5PR1, userComentarioCM5);
+  controladorComentario->comentarProducto(textoCM5, fechaComentarioCM5, idCM5PR1, userComentarioCM5);
 
   // CM 6 - Comentario 6 - comentario a PR2
   std::string textoCM6 = "¿Cual es la resolucion del Televisor LED?";
   DTFecha *fechaComentarioCM6 = new DTFecha(02, 06, 2024);
   int idCM6PR2 = idProducto(nombrePR2, nickUS1);
   std::string userComentarioCM6 = nickUS5;
-  // controladorComentario->comentarProducto(textoCM6, fechaComentarioCM6, idCM6PR2, userComentarioCM6);
+  controladorComentario->comentarProducto(textoCM6, fechaComentarioCM6, idCM6PR2, userComentarioCM6);
 
   // CM 7 - Comentario 7 - respuesta a CM6
   std::string textoCM7 = "El televisor LED tiene una resolucion de 4K UHD.";
   DTFecha *fechaComentarioCM7 = new DTFecha(02, 06, 2024);
-  int idCM7PR2 = idProducto(nombrePR2, nickUS1);
+  //int idCM7PR2 = idProducto(nombrePR2, nickUS1);
   std::string userComentarioCM7 = nickUS1;
-  // controladorComentario->responderComentario(textoCM7, fechaComentarioCM7, idCM7PR2, userComentarioCM7);
+  int idComentarioCM7 = controladorComentario->getIdComentario(textoCM6);
+  controladorComentario->responderComentario(textoCM7, fechaComentarioCM7,idComentarioCM7,userComentarioCM7);
 
   // CM 8 - Comentario 8 - comentario a PR2
   std::string textoCM8 = "¿Tiene soporte para HDR10?";
   DTFecha *fechaComentarioCM8 = new DTFecha(03, 06, 2024);
   int idCM8PR2 = idProducto(nombrePR2, nickUS1);
   std::string userComentarioCM8 = nickUS8;
-  // controladorComentario->comentarProducto(textoCM8, fechaComentarioCM8, idCM8PR2, userComentarioCM8);
+  controladorComentario->comentarProducto(textoCM8, fechaComentarioCM8, idCM8PR2, userComentarioCM8);
 
   // CM 9 - Comentario 9 - respuesta a CM8
   std::string textoCM9 = "Si, soporta HDR10.";
   DTFecha *fechaComentarioCM9 = new DTFecha(03, 06, 2024);
-  int idCM9PR2 = idProducto(nombrePR2, nickUS1);
+  //int idCM9PR2 = idProducto(nombrePR2, nickUS1);
   std::string userComentarioCM9 = nickUS1;
-  // controladorComentario->responderComentario(textoCM9, fechaComentarioCM9, idCM9PR2, userComentarioCM9);
+  int idComentarioCM9 = controladorComentario->getIdComentario(textoCM8);
+  controladorComentario->responderComentario(textoCM9, fechaComentarioCM9,idComentarioCM9,userComentarioCM9);
 
   // CM 10 - Comentario 10 - comentario a PR3
   std::string textoCM10 = "¿La chaqueta de cuero es resistente al agua?";
   DTFecha *fechaComentarioCM10 = new DTFecha(03, 06, 2024);
   int idCM10PR3 = idProducto(nombrePR3, nickUS2);
   std::string userComentarioCM10 = nickUS7;
-  // controladorComentario->comentarProducto(textoCM10, fechaComentarioCM10, idCM10PR3, userComentarioCM10);
+  controladorComentario->comentarProducto(textoCM10, fechaComentarioCM10, idCM10PR3, userComentarioCM10);
 
   // CM 11 - Comentario 11 - respuesta a CM10
   std::string textoCM11 = "No, la chaqueta de cuero no es resistente al agua.";
   DTFecha *fechaComentarioCM11 = new DTFecha(03, 06, 2024);
-  int idCM11PR3 = idProducto(nombrePR3, nickUS2);
+  //int idCM11PR3 = idProducto(nombrePR3, nickUS2);
   std::string userComentarioCM11 = nickUS2;
-  // controladorComentario->responderComentario(textoCM11, fechaComentarioCM11, idCM11PR3, userComentarioCM11);
+  int idComentarioCM11 = controladorComentario->getIdComentario(textoCM10);
+  controladorComentario->responderComentario(textoCM11, fechaComentarioCM11,idComentarioCM11,userComentarioCM11);
 
   // CM 12 - Comentario 12 - respuesta a CM10
   std::string textoCM12 = "¿Viene en otros colores?";
   DTFecha *fechaComentarioCM12 = new DTFecha(04, 06, 2024);
-  int idCM12PR3 = idProducto(nombrePR3, nickUS2);
+  //int idCM12PR3 = idProducto(nombrePR3, nickUS2);
   std::string userComentarioCM12 = nickUS5;
-  // controladorComentario->responderComentario(textoCM12, fechaComentarioCM12, idCM12PR3, userComentarioCM12);
+  int idComentarioCM12 = controladorComentario->getIdComentario(textoCM10);
+  controladorComentario->responderComentario(textoCM12, fechaComentarioCM12,idComentarioCM12,userComentarioCM12);
 
   // CM 13 - Comentario 13 - respuesta a CM12
   std::string textoCM13 = "Si, tambien esta disponible en marron.";
   DTFecha *fechaComentarioCM13 = new DTFecha(04, 06, 2024);
-  int idCM13PR3 = idProducto(nombrePR3, nickUS2);
+  //int idCM13PR3 = idProducto(nombrePR3, nickUS2);
   std::string userComentarioCM13 = nickUS2;
-  // controladorComentario->responderComentario(textoCM13, fechaComentarioCM13, idCM13PR3, userComentarioCM13);
+  int idComentarioCM13 = controladorComentario->getIdComentario(textoCM12);
+  controladorComentario->responderComentario(textoCM13, fechaComentarioCM13,idComentarioCM13,userComentarioCM13);
 
   // CM 14 - Comentario 14 - respuesta a CM10
   std::string textoCM14 = "¿Es adecuada para climas frios?";
   DTFecha *fechaComentarioCM14 = new DTFecha(04, 06, 2024);
-  int idCM14PR3 = idProducto(nombrePR3, nickUS2);
+  //int idCM14PR3 = idProducto(nombrePR3, nickUS2);
   std::string userComentarioCM14 = nickUS9;
-  // controladorComentario->responderComentario(textoCM14, fechaComentarioCM14, idCM14PR3, userComentarioCM14);
+  int idComentarioCM14 = controladorComentario->getIdComentario(textoCM10);
+  controladorComentario->responderComentario(textoCM14, fechaComentarioCM14,idComentarioCM14,userComentarioCM14);
 
   // CM 15 - Comentario 15 - comentario a PR4
   std::string textoCM15 = "¿Es adecuada para climas frios?";
   DTFecha *fechaComentarioCM15 = new DTFecha(04, 06, 2024);
   int idCM15PR4 = idProducto(nombrePR4, nickUS1);
   std::string userComentarioCM15 = nickUS8;
-  // controladorComentario->comentarProducto(textoCM15, fechaComentarioCM15, idCM15PR4, userComentarioCM15);
+  controladorComentario->comentarProducto(textoCM15, fechaComentarioCM15, idCM15PR4, userComentarioCM15);
 
   // CM 16 - Comentario 16 - respuesta a CM15
   std::string textoCM16 = "Si, el microondas digital incluye una funcion de descongelacion rapida.";
   DTFecha *fechaComentarioCM16 = new DTFecha(04, 06, 2024);
-  int idCM16PR4 = idProducto(nombrePR4, nickUS1);
+  //int idCM16PR4 = idProducto(nombrePR4, nickUS1);
   std::string userComentarioCM16 = nickUS1;
-  // controladorComentario->responderComentario(textoCM16, fechaComentarioCM16, idCM16PR4, userComentarioCM16);
+  int idComentarioCM16 = controladorComentario->getIdComentario(textoCM15);
+  controladorComentario->responderComentario(textoCM16, fechaComentarioCM16,idComentarioCM16,userComentarioCM16);
 
   // CM 17 - Comentario 17 - respuesta a CM15
   std::string textoCM17 = "¿Cuantos niveles de potencia tiene?";
   DTFecha *fechaComentarioCM17 = new DTFecha(05, 06, 2024);
-  int idCM17PR4 = idProducto(nombrePR4, nickUS1);
+  //int idCM17PR4 = idProducto(nombrePR4, nickUS1);
   std::string userComentarioCM17 = nickUS7;
-  // controladorComentario->responderComentario(textoCM17, fechaComentarioCM17, idCM17PR4, userComentarioCM17);
+  int idComentarioCM17 = controladorComentario->getIdComentario(textoCM15);
+  controladorComentario->responderComentario(textoCM17, fechaComentarioCM17,idComentarioCM17,userComentarioCM17);
 
   // CM 18 - Comentario 18 - respuesta a CM17
   std::string textoCM18 = "Tiene 10 niveles de potencia.";
   DTFecha *fechaComentarioCM18 = new DTFecha(05, 06, 2024);
-  int idCM18PR4 = idProducto(nombrePR4, nickUS1);
+  //int idCM18PR4 = idProducto(nombrePR4, nickUS1);
   std::string userComentarioCM18 = nickUS1;
-  // controladorComentario->responderComentario(textoCM18, fechaComentarioCM18, idCM18PR4, userComentarioCM18);
+  int idComentarioCM18 = controladorComentario->getIdComentario(textoCM17);
+  controladorComentario->responderComentario(textoCM18, fechaComentarioCM18,idComentarioCM18,userComentarioCM18);
 
   // CM 19 - Comentario 19 - respuesta a CM15
   std::string textoCM19 = "¿Es facil de limpiar?";
   DTFecha *fechaComentarioCM19 = new DTFecha(05, 06, 2024);
-  int idCM19PR4 = idProducto(nombrePR4, nickUS1);
+  //int idCM19PR4 = idProducto(nombrePR4, nickUS1);
   std::string userComentarioCM19 = nickUS9;
-  // controladorComentario->responderComentario(textoCM19, fechaComentarioCM19, idCM19PR4, userComentarioCM19);
+  int idComentarioCM19 = controladorComentario->getIdComentario(textoCM15);
+  controladorComentario->responderComentario(textoCM19, fechaComentarioCM19,idComentarioCM19,userComentarioCM19);
 
   // CM 20 - Comentario 20 - comentario a PR5
   std::string textoCM20 = "¿La luz LED se puede controlar con una aplicacion movil?";
   DTFecha *fechaComentarioCM20 = new DTFecha(05, 06, 2024);
   int idCM20PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM20 = nickUS9;
-  // controladorComentario->comentarProducto(textoCM20, fechaComentarioCM20, idCM20PR5, userComentarioCM20);
+  controladorComentario->comentarProducto(textoCM20, fechaComentarioCM20, idCM20PR5, userComentarioCM20);
 
   // CM 21 - Comentario 21 - respuesta a CM20
   std::string textoCM21 = "Si, la luz LED se puede controlar a traves de una aplicacion movil.";
   DTFecha *fechaComentarioCM21 = new DTFecha(05, 06, 2024);
-  int idCM21PR5 = idProducto(nombrePR5, nickUS3);
+  //int idCM21PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM21 = nickUS3;
-  // controladorComentario->responderComentario(textoCM21, fechaComentarioCM21, idCM21PR5, userComentarioCM21);
+  int idComentarioCM21 = controladorComentario->getIdComentario(textoCM20);
+  controladorComentario->responderComentario(textoCM21, fechaComentarioCM21,idComentarioCM21,userComentarioCM21);
 
   // CM 22 - Comentario 22 - respuesta a CM20
   std::string textoCM22 = "¿Es compatible con Alexa o Google Home?";
   DTFecha *fechaComentarioCM22 = new DTFecha(06, 06, 2024);
-  int idCM22PR5 = idProducto(nombrePR5, nickUS3);
+  //int idCM22PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM22 = nickUS8;
-  // controladorComentario->responderComentario(textoCM22, fechaComentarioCM22, idCM22PR5, userComentarioCM22);
+  int idComentarioCM22 = controladorComentario->getIdComentario(textoCM20);
+  controladorComentario->responderComentario(textoCM22, fechaComentarioCM22,idComentarioCM22,userComentarioCM22);
 
   // CM 23 - Comentario 23 - respuesta a CM22
   std::string textoCM23 = "Si, es compatible con ambos.";
   DTFecha *fechaComentarioCM23 = new DTFecha(06, 06, 2024);
-  int idCM23PR5 = idProducto(nombrePR5, nickUS3);
+  //int idCM23PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM23 = nickUS3;
-  // controladorComentario->responderComentario(textoCM23, fechaComentarioCM23, idCM23PR5, userComentarioCM23);
+  int idComentarioCM23 = controladorComentario->getIdComentario(textoCM22);
+  controladorComentario->responderComentario(textoCM23, fechaComentarioCM23,idComentarioCM23,userComentarioCM23);
 
   // CM 24 - Comentario 24 - respuesta a CM20
   std::string textoCM24 = "¿Cuanto dura la bateria?";
   DTFecha *fechaComentarioCM24 = new DTFecha(06, 06, 2024);
-  int idCM24PR5 = idProducto(nombrePR5, nickUS3);
+  //int idCM24PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM24 = nickUS7;
-  // controladorComentario->responderComentario(textoCM24, fechaComentarioCM24, idCM24PR5, userComentarioCM24);
+  int idComentarioCM24 = controladorComentario->getIdComentario(textoCM20);
+  controladorComentario->responderComentario(textoCM24, fechaComentarioCM24,idComentarioCM24,userComentarioCM24);
 
   // CM 25 - Comentario 25 - respuesta a CM20
   std::string textoCM25 = "¿La aplicacion movil es facil de usar?";
   DTFecha *fechaComentarioCM25 = new DTFecha(07, 06, 2024);
-  int idCM25PR5 = idProducto(nombrePR5, nickUS3);
+  //int idCM25PR5 = idProducto(nombrePR5, nickUS3);
   std::string userComentarioCM25 = nickUS8;
-  // controladorComentario->responderComentario(textoCM25, fechaComentarioCM25, idCM25PR5, userComentarioCM25);
+  int idComentarioCM25 = controladorComentario->getIdComentario(textoCM20);
+  controladorComentario->responderComentario(textoCM25, fechaComentarioCM25,idComentarioCM25,userComentarioCM25);
+
 
   std::cout << "Los datos iniciales fueron cargados." << std::endl;
 }
@@ -1171,8 +1250,7 @@ void ConsultarPromocion() // Implementado //
     return;
   }
 }
-
-void RealizarCompra() // Implementado //
+void RealizarCompra() // Implementado // Error al ingresar productos en promocion a la vez que productos fuera de promo (Aunque no esta en los casos de uso por lo que no es prioridad).
 {
   // seleccion de cliente
   listarNickClientes();
@@ -1260,12 +1338,10 @@ void RealizarCompra() // Implementado //
     std::cout << "Compra cancelada" << std::endl;
   }
 }
-                     
-void DejarComentario() // faltan funciones//
+                      // chequear comprar varios productos
+void DejarComentario() // Implemento
 {
-  std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
-  listarInfoVendedores(vendedores);
-  listarNickClientes();
+  listarNickUsuarios();
   std::string nickUsuario;
   std::cout << "Escriba su nickname de usuario" << std::endl;
   std::cin >> nickUsuario;
@@ -1286,6 +1362,12 @@ void DejarComentario() // faltan funciones//
   int idDelProducto;
   std::cout << "Escriba el ID del producto que desea comentar." << std::endl;
   std::cin >> idDelProducto;
+  while (!ExisteProducto(idDelProducto))
+  {
+    std::cout << "El producto ingresado no existe" << std::endl;
+    std::cout << "Porfavor ingrese un producto valido" << std::endl;
+    std::cin >> idDelProducto;
+  }
   std::cout << "1-Realizar un nuevo comentario" << std::endl
             << "2-Responder un comentario existente";
   std::cout << std::endl;
@@ -1296,29 +1378,62 @@ void DejarComentario() // faltan funciones//
     std::string texto;
     std::cout << "Escriba su comentario del producto" << std::endl;
     std::getline(std::cin >> std::ws, texto);
+    std::cout << "Ingrese fecha de hoy (dia/mes/anio)" << std::endl;
+    int dia;
+    int mes;
+    int anio;
+    std::cin >> dia;
+    std::cin >> mes;
+    std::cin >> anio;
+    DTFecha* fechahoy = new DTFecha(dia,mes,anio);
     // comentar ese texto en "idDelProducto"
+    controladorComentario->comentarProducto(texto,fechahoy,idDelProducto,nickUsuario);
+    std::cout << "Comentario ingresado" << std::endl;
   }
   else if (opcionElegida == 2)
   {
-    // lsitar comentarios del producto
-    int aResponder;
-    std::cout << "Escriba el ID del comentario que desea responder." << std::endl;
-    std::cin >> aResponder;
-    std::string texto;
-    std::cout << "Escriba su comentario del producto" << std::endl;
-    std::getline(std::cin >> std::ws, texto);
-    // comentar ese texto en respuesta de "aResponder"
+    // listar comentarios del producto
+    std::set<DTComentario *> comentariosProd = controladorComentario->listarComentariosProducto(idDelProducto);
+    bool hayCom = listarComentarios(comentariosProd);
+    if (hayCom){
+      int aResponder;
+      std::cout << "Escriba el ID del comentario que desea responder." << std::endl;
+      std::cin >> aResponder;
+      while (!ExisteComentario(comentariosProd, aResponder))
+      {
+        std::cout << "El comentario ingresado no existe" << std::endl;
+        std::cout << "Porfavor ingrese un ID valido" << std::endl;
+        std::cin >> aResponder;
+      }
+      std::string texto;
+      std::cout << "Escriba su comentario del producto" << std::endl;
+      std::getline(std::cin >> std::ws, texto);
+      std::cout << "Ingrese fecha de hoy (dia/mes/anio)" << std::endl;
+      int dia;
+      int mes;
+      int anio;
+      std::cin >> dia;
+      std::cin >> mes;
+      std::cin >> anio;
+      DTFecha* fechahoy = new DTFecha(dia,mes,anio);
+      // comentar ese texto en respuesta de "aResponder"
+      controladorComentario->responderComentario(texto, fechahoy,aResponder,nickUsuario);
+      std::cout << "Respuesta ingresada" << std::endl;
+    } 
+    else 
+    {
+     std::cout << "No hay comentarios en este producto" << std::endl;
+    }
   }
   else
   {
     std::cout << "Opcion invalida" << std::endl;
   }
 }
-
-void EliminarComentario() // faltan funciones//
+void EliminarComentario() // Implementado //
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();
-  listarInfoVendedores(vendedores);
+  listarNickVendedores(vendedores);
   listarNickClientes();
   std::string nickUsuario;
   std::cout << "Escriba su nickname de usuario" << std::endl;
@@ -1330,12 +1445,20 @@ void EliminarComentario() // faltan funciones//
     std::cin >> nickUsuario;
   }
   // Listar todos los comentarios de "nickUsuario"
-  int idComentario;
-  std::cout << "Escriba el ID del comentario que desea eliminar." << std::endl;
-  std::cin >> idComentario;
-  // Eliminar el comentario "idComentario" y todas sus respuestas "en cascada"
+  std::set<DTComentario*> comentariosUser = controladorComentario->listarComentariosUsuario(nickUsuario);
+  bool hayComentarios = listarComentarios(comentariosUser);
+  if (hayComentarios) {
+    int idComentario;
+    std::cout << "Escriba el ID del comentario que desea eliminar." << std::endl;
+    std::cin >> idComentario;
+    // Eliminar el comentario "idComentario" y todas sus respuestas "en cascada"
+    controladorComentario->eliminarComentario(idComentario);
+  }
+  else 
+  {
+    std::cout << "El usuario ingresado no posee comentarios." << std::endl;
+  }
 }
-
 void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima los productos con envios pendientes.
 {
   std::set<DTVendedor *> vendedores = controladorUsuario->listarVendedores();

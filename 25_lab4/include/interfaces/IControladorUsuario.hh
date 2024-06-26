@@ -18,10 +18,12 @@ class IControladorUsuario
 public:
   virtual Cliente *getCliente(std::string) = 0;
   virtual Vendedor *getVendedor(std::string) = 0;
+  virtual Usuario *getUsuario(std::string) = 0;
   virtual void altaNuevoCliente(std::string, std::string, DTFecha *, DTDireccion *, std::string) = 0;
   virtual void altaNuevoVendedor(std::string, std::string, DTFecha *, std::string) = 0;
   virtual void realizarSuscripciones(std::string, std::set<std::string>) = 0;
   virtual void eliminarSuscripciones(std::string, std::set<std::string>) = 0;
+  virtual void eliminarNotificaciones(std::string) = 0;
   virtual std::set<DTUsuario *> listarUsuarios() = 0;
   virtual std::set<DTCliente *> listarClientes() = 0;
   virtual std::set<DTVendedor *> listarVendedores() = 0;
