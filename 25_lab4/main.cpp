@@ -1521,7 +1521,8 @@ void EnviarProducto() //Implementado// Envia la compra, falta que SOLO imprima l
     std::cout << std::endl;
   }
 }
-void ExpedienteUsuario() // falta testear
+
+void ExpedienteUsuario() // Implementado
 {
   ListarUsuarios();
   std::string nickUsuario;

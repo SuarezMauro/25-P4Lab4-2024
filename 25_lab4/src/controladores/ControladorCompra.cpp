@@ -59,35 +59,41 @@ void ControladorCompra::registrarCompraExitosa(bool b)
 }
 bool ControladorCompra::calcularDescuentos()
 {
-	std::set<DTRegistroProducto *> productos = compraActual->getRegistroProductos();
-	for (std::set<DTRegistroProducto *>::iterator it = productos.begin(); it != productos.end(); ++it)
-	{
-		if ((*it)->getInfoPromo() != NULL)
-		{
-			std::map<int, DTProductoPromo *> productosPromo = (*it)->getInfoPromo()->getProductos();
-			std::set<DTRegistroProducto *> auxiliar;
-			for (std::set<DTRegistroProducto *>::iterator it = productos.begin(); it != productos.end(); ++it)
-			{
-				if (productosPromo[(*it)->getId()]->getCantidadMinima() <= (*it)->getCantidad())
-				{
-					auxiliar.insert(*it);
-				}
-			}
-			if (auxiliar.size() == productosPromo.size())
-			{
-				int monto1 = compraActual->getMontoFinal();
-				int monto2 = (*it)->getInfoPromo()->getPorcentajeDescuento();
-				int montoF = monto1 - (monto1 * monto2 / 100);
-				compraActual->setMontoFinal(montoF);
-				return true;
-			}
-			else
-			{
-				return false;
-			};
-		}
-	};return false;
+    std::set<DTRegistroProducto *> productos = compraActual->getRegistroProductos();
+    for (auto it = productos.begin(); it != productos.end(); ++it)
+    {
+        if ((*it)->getInfoPromo() != NULL)
+        {
+            std::map<int, DTProductoPromo *> productosPromo = (*it)->getInfoPromo()->getProductos();
+            std::set<DTRegistroProducto *> auxiliar;
+            for (auto it2 = productos.begin(); it2 != productos.end(); ++it2)
+            {
+                auto promoProducto = productosPromo.find((*it2)->getId());
+                if (promoProducto != productosPromo.end() && promoProducto->second != NULL)
+                {
+                    if (promoProducto->second->getCantidadMinima() <= (*it2)->getCantidad())
+                    {
+                        auxiliar.insert(*it2);
+                    }
+                }
+            }
+            if (auxiliar.size() == productosPromo.size())
+            {
+                int monto1 = compraActual->getMontoFinal();
+                int monto2 = (*it)->getInfoPromo()->getPorcentajeDescuento();
+                int montoF = monto1 - (monto1 * monto2 / 100);
+                compraActual->setMontoFinal(montoF);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    return false;
 }
+
 ControladorCompra::ControladorCompra() {}
 ControladorCompra::~ControladorCompra()
 {
